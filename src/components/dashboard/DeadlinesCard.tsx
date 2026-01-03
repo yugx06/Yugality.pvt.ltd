@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { AlertCircle, Clock, Calendar } from "lucide-react";
+import { AlertCircle, Calendar } from "lucide-react";
 
 const deadlines = [
   {
@@ -45,12 +45,21 @@ export const DeadlinesCard = ({ emergencyMode }: { emergencyMode?: boolean }) =>
     : deadlines;
 
   return (
-    <div className={`yugality-card p-6 ${emergencyMode && urgentDeadlines.length > 0 ? "yugality-card-emergency" : ""}`}>
+    <motion.div 
+      className={`yugality-card p-6 ${emergencyMode && urgentDeadlines.length > 0 ? "yugality-card-emergency" : ""}`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: 0.15 }}
+    >
       <div className="flex items-center gap-3 mb-6">
-        <div className={`w-10 h-10 rounded-lg flex items-center justify-center
-          ${urgentDeadlines.length > 0 ? "bg-destructive/10" : "bg-secondary/10"}`}>
-          <AlertCircle className={`w-5 h-5 ${urgentDeadlines.length > 0 ? "text-destructive" : "text-secondary"}`} />
-        </div>
+        <motion.div 
+          className={`w-10 h-10 rounded-lg flex items-center justify-center
+            ${urgentDeadlines.length > 0 ? "bg-destructive/10" : "bg-tech/10"}`}
+          animate={urgentDeadlines.length > 0 ? { scale: [1, 1.05, 1] } : {}}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <AlertCircle className={`w-5 h-5 ${urgentDeadlines.length > 0 ? "text-destructive" : "text-tech"}`} />
+        </motion.div>
         <div>
           <h3 className="text-lg font-semibold text-foreground">Critical Deadlines</h3>
           <p className="text-xs text-muted-foreground">
@@ -65,15 +74,23 @@ export const DeadlinesCard = ({ emergencyMode }: { emergencyMode?: boolean }) =>
             key={deadline.id}
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.08 }}
+            transition={{ delay: 0.2 + index * 0.08 }}
+            whileHover={{ scale: 1.02, x: 4 }}
             className={`
               p-3 rounded-lg border transition-all duration-200 cursor-pointer
               ${deadline.urgent 
-                ? "border-destructive/30 bg-destructive/5 hover:bg-destructive/10" 
-                : "border-border/50 bg-muted/20 hover:bg-muted/40"
+                ? "border-destructive/30 bg-destructive/5 hover:bg-destructive/10 hover:border-destructive/50" 
+                : "border-border bg-card hover:bg-muted/50 hover:border-border"
               }
             `}
           >
+            {deadline.urgent && (
+              <motion.div
+                className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full"
+                animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+            )}
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <p className={`text-sm font-medium truncate
@@ -96,6 +113,6 @@ export const DeadlinesCard = ({ emergencyMode }: { emergencyMode?: boolean }) =>
           </motion.div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 };

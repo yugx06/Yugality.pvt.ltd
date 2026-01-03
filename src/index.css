@@ -6,67 +6,70 @@
 
 @layer base {
   :root {
-    /* Yugality Dark Theme - Legal Professional */
-    --background: 0 0% 6%; /* #0E0E0F deep charcoal */
-    --foreground: 220 14% 96%; /* #F5F6F7 soft white */
+    /* Yugality Light Theme - Professional Legal */
+    --background: 220 20% 97%; /* Soft off-white */
+    --foreground: 220 25% 20%; /* Charcoal text */
 
-    --card: 220 10% 18%; /* #2A2D34 slate dark gray */
-    --card-foreground: 220 14% 96%;
+    --card: 0 0% 100%; /* Pure white cards */
+    --card-foreground: 220 25% 20%;
 
-    --popover: 220 10% 14%;
-    --popover-foreground: 220 14% 96%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 20%;
 
-    --primary: 43 47% 54%; /* #C8A24D gold justice */
-    --primary-foreground: 0 0% 6%;
+    --primary: 43 55% 48%; /* Gold justice - slightly deeper */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 215 18% 50%; /* #6B7C93 tech accent */
-    --secondary-foreground: 220 14% 96%;
+    --secondary: 220 14% 92%; /* Light gray surface */
+    --secondary-foreground: 220 25% 30%;
 
-    --muted: 220 10% 22%;
-    --muted-foreground: 215 10% 75%; /* #BFC3C7 silver gray */
+    --muted: 220 14% 94%; /* Very light gray */
+    --muted-foreground: 220 15% 50%; /* Medium gray text */
 
-    --accent: 43 47% 54%;
-    --accent-foreground: 0 0% 6%;
+    --accent: 43 55% 48%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 4 64% 46%; /* #C0392B emergency red */
-    --destructive-foreground: 220 14% 96%;
+    --destructive: 4 74% 52%; /* Emergency red */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 220 10% 25%;
-    --input: 220 10% 20%;
-    --ring: 43 47% 54%;
+    --border: 220 15% 88%; /* Subtle border */
+    --input: 220 14% 94%;
+    --ring: 43 55% 48%;
 
     --radius: 0.75rem;
 
     /* Custom Yugality tokens */
-    --gold: 43 47% 54%;
-    --gold-glow: 43 60% 60%;
-    --tech-blue: 215 18% 50%;
-    --tech-blue-light: 215 25% 60%;
-    --emergency: 4 64% 46%;
-    --emergency-glow: 4 70% 55%;
-    --surface-elevated: 220 10% 22%;
-    --surface-overlay: 220 10% 12%;
+    --gold: 43 55% 48%;
+    --gold-light: 43 60% 75%;
+    --gold-glow: 43 70% 58%;
+    --tech-blue: 215 25% 55%;
+    --tech-blue-light: 215 30% 75%;
+    --emergency: 4 74% 52%;
+    --emergency-light: 4 80% 95%;
+    --emergency-glow: 4 80% 60%;
+    --surface-elevated: 0 0% 100%;
+    --surface-overlay: 220 20% 98%;
 
     /* Gradients */
-    --gradient-gold: linear-gradient(135deg, hsl(43 47% 54%), hsl(43 60% 45%));
-    --gradient-tech: linear-gradient(135deg, hsl(215 18% 50%), hsl(215 30% 40%));
-    --gradient-surface: linear-gradient(180deg, hsl(220 10% 20%), hsl(220 10% 16%));
-    --gradient-emergency: linear-gradient(135deg, hsl(4 64% 46%), hsl(4 70% 38%));
+    --gradient-gold: linear-gradient(135deg, hsl(43 55% 48%), hsl(43 45% 42%));
+    --gradient-tech: linear-gradient(135deg, hsl(215 25% 55%), hsl(215 30% 45%));
+    --gradient-surface: linear-gradient(180deg, hsl(0 0% 100%), hsl(220 14% 97%));
+    --gradient-emergency: linear-gradient(135deg, hsl(4 74% 52%), hsl(4 80% 45%));
 
-    /* Shadows */
-    --shadow-card: 0 4px 24px -4px hsl(0 0% 0% / 0.4);
-    --shadow-elevated: 0 8px 32px -8px hsl(0 0% 0% / 0.5);
-    --shadow-gold-glow: 0 0 30px hsl(43 47% 54% / 0.2);
-    --shadow-emergency-glow: 0 0 30px hsl(4 64% 46% / 0.3);
+    /* Shadows - softer, more diffuse */
+    --shadow-sm: 0 1px 2px hsl(220 25% 20% / 0.04);
+    --shadow-card: 0 4px 16px -2px hsl(220 25% 20% / 0.06), 0 2px 4px -1px hsl(220 25% 20% / 0.04);
+    --shadow-elevated: 0 12px 40px -8px hsl(220 25% 20% / 0.12), 0 4px 12px -2px hsl(220 25% 20% / 0.08);
+    --shadow-gold-glow: 0 8px 30px hsl(43 55% 48% / 0.15);
+    --shadow-emergency-glow: 0 0 40px hsl(4 74% 52% / 0.2);
 
-    --sidebar-background: 220 10% 10%;
-    --sidebar-foreground: 220 14% 96%;
-    --sidebar-primary: 43 47% 54%;
-    --sidebar-primary-foreground: 0 0% 6%;
-    --sidebar-accent: 220 10% 18%;
-    --sidebar-accent-foreground: 220 14% 96%;
-    --sidebar-border: 220 10% 20%;
-    --sidebar-ring: 43 47% 54%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 25% 20%;
+    --sidebar-primary: 43 55% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent-foreground: 220 25% 20%;
+    --sidebar-border: 220 15% 92%;
+    --sidebar-ring: 43 55% 48%;
   }
 }
 
@@ -87,54 +90,59 @@
 
 @layer components {
   .yugality-card {
-    @apply bg-card rounded-xl border border-border/50 shadow-[var(--shadow-card)] 
-           transition-all duration-300 hover:shadow-[var(--shadow-elevated)] 
-           hover:border-border hover:-translate-y-0.5;
+    @apply bg-card rounded-xl border border-border shadow-[var(--shadow-card)] 
+           transition-all duration-300 ease-out;
+  }
+
+  .yugality-card-interactive {
+    @apply yugality-card hover:shadow-[var(--shadow-elevated)] 
+           hover:border-border hover:-translate-y-1 hover:scale-[1.01]
+           active:scale-[0.99] active:shadow-[var(--shadow-card)];
   }
 
   .yugality-card-gold {
-    @apply yugality-card hover:border-primary/50 hover:shadow-[var(--shadow-gold-glow)];
+    @apply yugality-card-interactive hover:border-primary/40 hover:shadow-[var(--shadow-gold-glow)];
   }
 
   .yugality-card-emergency {
-    @apply yugality-card border-destructive/30 shadow-[var(--shadow-emergency-glow)];
+    @apply yugality-card border-destructive/40 bg-[hsl(var(--emergency-light))] animate-pulse-subtle;
   }
 
   .yugality-button-gold {
     @apply bg-primary text-primary-foreground font-medium px-4 py-2 rounded-lg
-           transition-all duration-200 hover:brightness-110 
-           active:scale-[0.98] shadow-[var(--shadow-gold-glow)];
+           transition-all duration-200 ease-out hover:brightness-105 hover:shadow-[var(--shadow-gold-glow)]
+           hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0;
   }
 
   .yugality-button-ghost {
-    @apply text-muted-foreground hover:text-foreground hover:bg-muted/50
+    @apply text-muted-foreground hover:text-foreground hover:bg-muted
            px-3 py-2 rounded-lg transition-all duration-200;
   }
 
   .yugality-nav-item {
     @apply flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground
-           transition-all duration-200 hover:text-foreground hover:bg-muted/50
-           cursor-pointer;
+           transition-all duration-200 ease-out hover:text-foreground hover:bg-muted
+           hover:translate-x-1 cursor-pointer;
   }
 
   .yugality-nav-item-active {
-    @apply yugality-nav-item text-primary bg-primary/10 border-l-2 border-primary
-           hover:bg-primary/15 hover:text-primary;
+    @apply yugality-nav-item text-primary bg-primary/8 border-l-3 border-primary
+           hover:bg-primary/12 hover:text-primary translate-x-0;
   }
 
   .status-urgent {
-    @apply bg-destructive/20 text-destructive border border-destructive/30 
-           px-2 py-0.5 rounded-full text-xs font-medium;
+    @apply bg-destructive/10 text-destructive border border-destructive/20 
+           px-2.5 py-0.5 rounded-full text-xs font-medium animate-pulse-subtle;
   }
 
   .status-pending {
-    @apply bg-secondary/20 text-secondary border border-secondary/30 
-           px-2 py-0.5 rounded-full text-xs font-medium;
+    @apply bg-tech/10 text-tech border border-tech/20 
+           px-2.5 py-0.5 rounded-full text-xs font-medium;
   }
 
   .status-filed {
-    @apply bg-primary/20 text-primary border border-primary/30 
-           px-2 py-0.5 rounded-full text-xs font-medium;
+    @apply bg-primary/10 text-primary border border-primary/20 
+           px-2.5 py-0.5 rounded-full text-xs font-medium;
   }
 
   .emergency-mode-active {
@@ -144,31 +152,60 @@
   .emergency-mode-active::before {
     content: '';
     @apply absolute inset-0 rounded-xl pointer-events-none;
-    box-shadow: inset 0 0 60px hsl(4 64% 46% / 0.15);
+    box-shadow: inset 0 0 80px hsl(4 74% 52% / 0.08);
+  }
+
+  /* Interactive hover lift effect */
+  .hover-lift {
+    @apply transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-elevated)];
+  }
+
+  /* Slide-in animation helper */
+  .slide-in-panel {
+    @apply animate-slide-in-right;
+  }
+
+  /* Fade scale entrance */
+  .fade-scale-in {
+    @apply animate-fade-scale-in;
   }
 }
 
 @layer utilities {
-  .scrollbar-dark {
+  .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--muted)) transparent;
+    scrollbar-color: hsl(var(--border)) transparent;
   }
 
-  .scrollbar-dark::-webkit-scrollbar {
+  .scrollbar-thin::-webkit-scrollbar {
     width: 6px;
   }
 
-  .scrollbar-dark::-webkit-scrollbar-track {
+  .scrollbar-thin::-webkit-scrollbar-track {
     background: transparent;
   }
 
-  .scrollbar-dark::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted));
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
     border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
   }
 
   .text-gradient-gold {
     @apply bg-clip-text text-transparent;
     background-image: var(--gradient-gold);
+  }
+
+  /* Glass morphism */
+  .glass {
+    @apply bg-card/80 backdrop-blur-xl border-border/50;
+  }
+
+  /* Subtle border on hover */
+  .border-hover {
+    @apply border border-transparent hover:border-border transition-colors duration-200;
   }
 }

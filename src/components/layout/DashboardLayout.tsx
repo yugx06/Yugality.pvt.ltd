@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Sidebar } from "./Sidebar";
 import { Navbar } from "./Navbar";
 
@@ -28,20 +28,33 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <motion.main
         initial={false}
         animate={{ marginLeft: sidebarWidth }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
+        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
         className="pt-16 min-h-screen"
       >
-        <div className="p-6">
+        <motion.div 
+          className="p-6"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
           {children}
-        </div>
+        </motion.div>
       </motion.main>
 
       {/* Emergency Mode Overlay */}
-      {emergencyMode && (
-        <div className="fixed inset-0 pointer-events-none z-50">
-          <div className="absolute inset-0 bg-gradient-to-t from-destructive/5 to-transparent" />
-        </div>
-      )}
+      <AnimatePresence>
+        {emergencyMode && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 pointer-events-none z-50"
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-destructive/3 to-transparent" />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

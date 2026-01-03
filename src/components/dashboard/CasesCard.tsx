@@ -23,11 +23,20 @@ export const CasesCard = () => {
   };
 
   return (
-    <div className="yugality-card-gold p-6">
+    <motion.div 
+      className="yugality-card-gold p-6"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: 0.1 }}
+    >
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+        <motion.div 
+          className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"
+          whileHover={{ scale: 1.1, rotate: 5 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        >
           <Briefcase className="w-5 h-5 text-primary" />
-        </div>
+        </motion.div>
         <h3 className="text-lg font-semibold text-foreground">Active Cases</h3>
       </div>
 
@@ -38,10 +47,19 @@ export const CasesCard = () => {
             key={item.status}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="text-center p-3 rounded-lg bg-muted/30"
+            transition={{ delay: 0.2 + index * 0.1 }}
+            whileHover={{ scale: 1.05, y: -2 }}
+            className="text-center p-3 rounded-lg bg-muted/40 border border-border/50 hover:border-primary/30 
+                       hover:shadow-[var(--shadow-card)] transition-all duration-200 cursor-pointer"
           >
-            <p className="text-2xl font-bold text-foreground">{item.count}</p>
+            <motion.p 
+              className="text-2xl font-bold text-foreground"
+              initial={{ scale: 0.5 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.3 + index * 0.1, type: "spring", stiffness: 200 }}
+            >
+              {item.count}
+            </motion.p>
             <p className="text-xs text-muted-foreground mb-1">{item.status}</p>
             <div className="flex items-center justify-center gap-1 text-xs">
               {getTrendIcon(item.trend)}
@@ -59,14 +77,15 @@ export const CasesCard = () => {
         {recentCases.map((caseItem, index) => (
           <motion.div
             key={caseItem.name}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 + index * 0.1 }}
-            className="flex items-center justify-between py-2 border-b border-border/30 last:border-0
-                       hover:bg-muted/20 -mx-2 px-2 rounded transition-colors cursor-pointer"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 + index * 0.08 }}
+            whileHover={{ x: 4, backgroundColor: "hsl(var(--muted) / 0.4)" }}
+            className="flex items-center justify-between py-3 px-3 -mx-3 border-b border-border/30 last:border-0
+                       rounded-lg transition-all duration-200 cursor-pointer group"
           >
             <div>
-              <p className="text-sm font-medium text-foreground">{caseItem.name}</p>
+              <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{caseItem.name}</p>
               <p className="text-xs text-muted-foreground">{caseItem.type}</p>
             </div>
             <div className="text-right">
@@ -79,6 +98,6 @@ export const CasesCard = () => {
           </motion.div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 };

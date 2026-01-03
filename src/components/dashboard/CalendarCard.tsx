@@ -15,31 +15,44 @@ export const CalendarCard = () => {
 
   const getDayClass = (day: number) => {
     if (emergencyDates.includes(day)) {
-      return "bg-destructive text-destructive-foreground";
+      return "bg-destructive text-destructive-foreground shadow-sm";
     }
     if (courtDates.includes(day)) {
-      return "bg-primary text-primary-foreground";
+      return "bg-primary text-primary-foreground shadow-sm";
     }
     if (day === 3) {
-      return "ring-2 ring-primary text-primary";
+      return "ring-2 ring-primary text-primary bg-primary/5";
     }
-    return "hover:bg-muted/50";
+    return "hover:bg-muted";
   };
 
   return (
-    <div className="yugality-card p-6">
+    <motion.div 
+      className="yugality-card-interactive p-6"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: 0.2 }}
+    >
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-foreground">Calendar</h3>
         <div className="flex items-center gap-2">
-          <button className="p-1 hover:bg-muted/50 rounded transition-colors">
+          <motion.button 
+            className="p-1.5 hover:bg-muted rounded-lg transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
             <ChevronLeft className="w-4 h-4 text-muted-foreground" />
-          </button>
+          </motion.button>
           <span className="text-sm font-medium text-foreground min-w-[100px] text-center">
             January 2026
           </span>
-          <button className="p-1 hover:bg-muted/50 rounded transition-colors">
+          <motion.button 
+            className="p-1.5 hover:bg-muted rounded-lg transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -65,10 +78,12 @@ export const CalendarCard = () => {
             key={day}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.01 }}
+            transition={{ delay: 0.3 + index * 0.008, type: "spring", stiffness: 300, damping: 20 }}
+            whileHover={{ scale: 1.15, zIndex: 10 }}
+            whileTap={{ scale: 0.95 }}
             className={`
               aspect-square flex items-center justify-center text-sm rounded-lg
-              transition-all duration-200 cursor-pointer
+              transition-all duration-150 cursor-pointer font-medium
               ${getDayClass(day)}
             `}
           >
@@ -78,16 +93,23 @@ export const CalendarCard = () => {
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border/50">
+      <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-primary" />
+          <motion.div 
+            className="w-3 h-3 rounded-full bg-primary shadow-sm" 
+            whileHover={{ scale: 1.3 }}
+          />
           <span className="text-xs text-muted-foreground">Court Date</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-destructive" />
+          <motion.div 
+            className="w-3 h-3 rounded-full bg-destructive shadow-sm"
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
           <span className="text-xs text-muted-foreground">Urgent</span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
