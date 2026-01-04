@@ -2,6 +2,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sidebar } from "./Sidebar";
 import { Navbar } from "./Navbar";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { QuickActionsButton } from "@/components/QuickActionsButton";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -41,6 +43,10 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         </motion.div>
       </motion.main>
 
+      {/* Floating Buttons */}
+      <WhatsAppButton />
+      <QuickActionsButton />
+
       {/* Emergency Mode Overlay */}
       <AnimatePresence>
         {emergencyMode && (
@@ -49,7 +55,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 pointer-events-none z-50"
+            className="fixed inset-0 pointer-events-none z-40"
           >
             <div className="absolute inset-0 bg-gradient-to-t from-destructive/3 to-transparent" />
           </motion.div>
