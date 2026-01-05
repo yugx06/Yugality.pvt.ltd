@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Clock, MapPin, ChevronRight } from "lucide-react";
+import { Clock, MapPin, ChevronRight, Crown, Calendar } from "lucide-react";
 
 const hearings = [
   {
@@ -47,7 +47,7 @@ const itemVariants = {
     opacity: 1, 
     x: 0,
     transition: {
-      duration: 0.3,
+      duration: 0.4,
       ease: [0.4, 0, 0.2, 1] as const,
     },
   },
@@ -56,15 +56,28 @@ const itemVariants = {
 export const HearingsCard = () => {
   return (
     <motion.div 
-      className="yugality-card-interactive p-6"
+      className="yugality-card-interactive p-6 relative overflow-hidden"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
+      transition={{ duration: 0.5 }}
     >
+      {/* Decorative corner element */}
+      <div className="absolute top-0 right-0 w-24 h-24 opacity-5">
+        <Crown className="w-full h-full text-primary" />
+      </div>
+
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-foreground">Upcoming Hearings</h3>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center border border-primary/30">
+            <Calendar className="w-5 h-5 text-primary" />
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-foreground">Upcoming Hearings</h3>
+            <p className="text-xs text-muted-foreground">Next 48 hours</p>
+          </div>
+        </div>
         <motion.button 
-          className="text-sm text-primary hover:text-primary/80 flex items-center gap-1 transition-colors"
+          className="text-sm text-primary hover:text-primary/80 flex items-center gap-1 transition-colors font-medium"
           whileHover={{ x: 3 }}
           whileTap={{ scale: 0.97 }}
         >
@@ -87,28 +100,39 @@ export const HearingsCard = () => {
               backgroundColor: "hsl(var(--muted) / 0.5)",
             }}
             className={`
-              relative pl-4 py-3 border-l-2 rounded-r-lg transition-colors cursor-pointer group
-              ${hearing.urgent ? "border-destructive bg-destructive/5" : "border-primary/30 hover:border-primary/60"}
+              relative pl-5 pr-4 py-4 rounded-xl transition-all duration-300 cursor-pointer group
+              ${hearing.urgent 
+                ? "border border-destructive/30 bg-destructive/5 hover:bg-destructive/10" 
+                : "border border-border/50 hover:border-primary/30 bg-card/50"
+              }
             `}
           >
+            {/* Left border indicator */}
+            <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-10 rounded-r-full
+              ${hearing.urgent 
+                ? "bg-gradient-to-b from-destructive to-destructive/50" 
+                : "bg-gradient-to-b from-primary to-primary/50"
+              }`} 
+            />
+
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full
+                <div className="flex items-center gap-2 mb-2">
+                  <span className={`text-xs font-semibold px-2.5 py-1 rounded-full
                     ${hearing.urgent ? "status-urgent" : "status-filed"}`}>
                     {hearing.type}
                   </span>
-                  <span className="text-xs text-muted-foreground">{hearing.date}</span>
+                  <span className="text-xs text-muted-foreground font-medium">{hearing.date}</span>
                 </div>
-                <h4 className="text-sm font-medium text-foreground mb-1 group-hover:text-primary transition-colors">
+                <h4 className="text-sm font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
                   {hearing.case}
                 </h4>
                 <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-3 h-3" /> {hearing.court}
+                  <span className="flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5" /> {hearing.court}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" /> {hearing.time}
+                  <span className="flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5" /> {hearing.time}
                   </span>
                 </div>
               </div>
@@ -117,7 +141,7 @@ export const HearingsCard = () => {
                 whileHover={{ opacity: 1, x: 0 }}
                 className="opacity-0 group-hover:opacity-100 transition-opacity"
               >
-                <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                <ChevronRight className="w-5 h-5 text-primary" />
               </motion.div>
             </div>
           </motion.div>
