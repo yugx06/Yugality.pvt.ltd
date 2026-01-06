@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Bell, User, AlertTriangle, Bot } from "lucide-react";
+import { Search, Bell, User, AlertTriangle, Bot, LogOut, Settings, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,6 +14,8 @@ import {
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationsPanel } from "@/components/NotificationsPanel";
 import { AIAssistantDrawer } from "@/components/AIAssistantDrawer";
+import { useAuth } from "@/contexts/AuthContext";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface NavbarProps {
   sidebarWidth: number;
@@ -25,6 +28,32 @@ export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle }: Navba
   const [searchFocused, setSearchFocused] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showAIAssistant, setShowAIAssistant] = useState(false);
+  
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/auth");
+  };
+
+  const getRoleColor = (role?: string) => {
+    switch (role) {
+      case 'lawyer': return 'from-amber-500 to-orange-500';
+      case 'client': return 'from-emerald-500 to-teal-500';
+      case 'admin': return 'from-purple-500 to-indigo-500';
+      default: return 'from-primary to-primary/80';
+    }
+  };
+
+  const getRoleBadge = (role?: string) => {
+    switch (role) {
+      case 'lawyer': return 'Advocate';
+      case 'client': return 'Client';
+      case 'admin': return 'Admin';
+      default: return 'User';
+    }
+  };
 
   return (
     <>
@@ -164,17 +193,42 @@ export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle }: Navba
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground hover:bg-muted">
-                  <User className="w-5 h-5" />
+                <Button variant="ghost" className="gap-2 px-2 text-muted-foreground hover:text-foreground hover:bg-muted">
+                  <Avatar className="h-7 w-7">
+                    <AvatarFallback className={`bg-gradient-to-br ${getRoleColor(user?.role)} text-white text-xs font-bold`}>
+                      {user?.name?.charAt(0) || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="hidden md:flex flex-col items-start">
+                    <span className="text-xs font-medium text-foreground">{user?.name?.split(' ')[0]}</span>
+                    <span className={`text-[10px] bg-gradient-to-r ${getRoleColor(user?.role)} bg-clip-text text-transparent font-semibold`}>
+                      {getRoleBadge(user?.role)}
+                    </span>
+                  </div>
                 </Button>
               </motion.div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48 bg-card border-border shadow-[var(--shadow-elevated)] animate-fade-scale-in">
-              <DropdownMenuItem className="cursor-pointer hover:bg-muted focus:bg-muted">Profile</DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer hover:bg-muted focus:bg-muted">Settings</DropdownMenuItem>
+            <DropdownMenuContent align="end" className="w-56 bg-card border-border shadow-[var(--shadow-elevated)] animate-fade-scale-in">
+              <div className="px-3 py-2 border-b border-border">
+                <p className="text-sm font-medium text-foreground">{user?.name}</p>
+                <p className="text-xs text-muted-foreground">{user?.email}</p>
+                <span className={`inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r ${getRoleColor(user?.role)} text-white`}>
+                  <Crown className="w-3 h-3" />
+                  {getRoleBadge(user?.role)}
+                </span>
+              </div>
+              <DropdownMenuItem className="cursor-pointer hover:bg-muted focus:bg-muted gap-2">
+                <User className="w-4 h-4" /> Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer hover:bg-muted focus:bg-muted gap-2">
+                <Settings className="w-4 h-4" /> Settings
+              </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-border" />
-              <DropdownMenuItem className="cursor-pointer text-muted-foreground hover:bg-muted focus:bg-muted">
-                Log out
+              <DropdownMenuItem 
+                className="cursor-pointer text-destructive hover:bg-destructive/10 focus:bg-destructive/10 gap-2"
+                onClick={handleLogout}
+              >
+                <LogOut className="w-4 h-4" /> Log out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
