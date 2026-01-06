@@ -25,6 +25,7 @@ const menuItems = [
   { icon: Scale, label: "Case Analysis", path: "/case-analysis" },
   { icon: Receipt, label: "Billing", path: "/billing" },
   { icon: Share2, label: "Referrals", path: "/referrals" },
+  { icon: Users, label: "Profile", path: "/profile" },
 ];
 
 interface SidebarProps {
