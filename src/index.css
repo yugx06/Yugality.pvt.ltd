@@ -273,4 +273,35 @@
   .border-hover {
     @apply border border-transparent hover:border-border transition-colors duration-200;
   }
+
+  /* Leaflet map customization */
+  .leaflet-container {
+    @apply rounded-lg;
+  }
+
+  .leaflet-popup-content-wrapper {
+    @apply bg-card border border-border rounded-lg shadow-lg;
+  }
+
+  .leaflet-popup-content {
+    @apply text-foreground;
+  }
+
+  .leaflet-popup-tip {
+    @apply bg-card;
+  }
+
+  /* Custom urgent marker animation */
+  .custom-urgent-marker {
+    animation: urgent-bounce 1s ease-in-out infinite;
+  }
+
+  @keyframes urgent-bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
 }

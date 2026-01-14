@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Bot, Lightbulb, ArrowRight, Sparkles } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const insights = [
   {
@@ -26,6 +27,7 @@ const insights = [
 ];
 
 export const AIInsightsCard = () => {
+  const { t } = useLanguage();
   return (
     <motion.div 
       className="yugality-card-interactive p-6 relative overflow-hidden"
@@ -46,7 +48,7 @@ export const AIInsightsCard = () => {
             <Bot className="w-5 h-5 text-tech" />
           </motion.div>
           <div>
-            <h3 className="text-lg font-semibold text-foreground">AI Insights</h3>
+            <h3 className="text-lg font-semibold text-foreground">{t("AI Insights")}</h3>
             <p className="text-xs text-tech flex items-center gap-1">
               <motion.span
                 animate={{ opacity: [0.5, 1, 0.5] }}
@@ -54,7 +56,7 @@ export const AIInsightsCard = () => {
               >
                 <Sparkles className="w-3 h-3" />
               </motion.span>
-              Powered by Yugality AI
+              {t("Powered by Yugality AI")}
             </p>
           </div>
         </div>
@@ -87,7 +89,7 @@ export const AIInsightsCard = () => {
                                transition-all duration-200"
                     whileHover={{ x: 4 }}
                   >
-                    {insight.action}
+                    {t(insight.action)}
                     <ArrowRight className="w-3 h-3" />
                   </motion.button>
                 </div>
@@ -104,7 +106,7 @@ export const AIInsightsCard = () => {
           whileTap={{ scale: 0.98 }}
         >
           <Bot className="w-4 h-4" />
-          Open AI Assistant
+          {t("Open AI Assistant")}
         </motion.button>
       </div>
     </motion.div>

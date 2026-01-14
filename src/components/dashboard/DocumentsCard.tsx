@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { FileText, Upload, ChevronRight, FileCheck, FileClock } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const recentDocs = [
   {
@@ -33,6 +34,7 @@ const recentDocs = [
 ];
 
 export const DocumentsCard = () => {
+  const { t } = useLanguage();
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "filed": return <FileCheck className="w-4 h-4 text-primary" />;
@@ -56,13 +58,13 @@ export const DocumentsCard = () => {
           >
             <FileText className="w-5 h-5 text-foreground" />
           </motion.div>
-          <h3 className="text-lg font-semibold text-foreground">Recent Documents</h3>
+          <h3 className="text-lg font-semibold text-foreground">{t("Recent Documents")}</h3>
         </div>
         <motion.button 
           className="text-sm text-primary hover:text-primary/80 flex items-center gap-1 transition-colors"
           whileHover={{ x: 3 }}
         >
-          View all <ChevronRight className="w-4 h-4" />
+          {t("View all")} <ChevronRight className="w-4 h-4" />
         </motion.button>
       </div>
 
@@ -81,7 +83,7 @@ export const DocumentsCard = () => {
           >
             <Upload className="w-5 h-5" />
           </motion.div>
-          <span className="text-sm">Drop files here or click to upload</span>
+          <span className="text-sm">{t("Drop files here or click to upload")}</span>
         </div>
       </motion.div>
 
@@ -109,7 +111,7 @@ export const DocumentsCard = () => {
             <span className={`text-xs px-2 py-0.5 rounded-full
               ${doc.status === "filed" ? "status-filed" : 
                 doc.status === "pending" ? "status-pending" : "status-urgent"}`}>
-              {doc.status}
+              {t(doc.status)}
             </span>
           </motion.div>
         ))}

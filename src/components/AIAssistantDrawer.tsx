@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Bot, Send, Sparkles, FileText, Scale, BookOpen, Lightbulb, X, Minimize2, Plus, Paperclip, Mic, Crown, MessageSquare, Search, PenTool, ChevronDown, Settings, History, Star } from "lucide-react";
+import { Bot, Send, Sparkles, FileText, Scale, BookOpen, Lightbulb, X, Minimize2, Plus, Paperclip, Mic, MessageSquare, Search, PenTool, ChevronDown, Settings, History, Star, Clock, Users, Wand2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState, useRef, useEffect } from "react";
@@ -18,15 +18,110 @@ const suggestions = [
 ];
 
 const promptLibrary = [
-  { category: "Document Analysis", prompts: ["Summarize this contract", "Find key clauses", "Check for risks"] },
-  { category: "Case Research", prompts: ["Find similar cases", "Precedent analysis", "Court rulings"] },
-  { category: "Drafting", prompts: ["Draft affidavit", "Reply to notice", "Legal opinion"] },
-];
-
-const actionModes = [
-  { id: "ask", label: "Ask", icon: MessageSquare, description: "Get answers to your questions" },
-  { id: "research", label: "Research", icon: Search, description: "Deep dive into legal research" },
-  { id: "draft", label: "Draft", icon: PenTool, description: "Generate legal documents" },
+  { 
+    category: "Document Drafting", 
+    icon: PenTool,
+    prompts: [
+      "Draft a comprehensive legal notice for payment recovery with statutory provisions",
+      "Create a detailed employment contract with non-compete and confidentiality clauses",
+      "Prepare a partnership deed with profit-sharing and dissolution terms",
+      "Draft a power of attorney for property transactions",
+      "Write a cease and desist letter for trademark infringement",
+      "Create a memorandum of understanding for business collaboration",
+      "Draft a rental agreement with maintenance and termination clauses"
+    ] 
+  },
+  { 
+    category: "Legal Research", 
+    icon: Search,
+    prompts: [
+      "Analyze recent Supreme Court judgments on property disputes and adverse possession",
+      "Research amendments to labor laws regarding employee termination",
+      "Find precedents for trademark infringement cases in the IT sector",
+      "Analyze case laws on Section 138 NI Act for cheque bounce cases",
+      "Research judicial interpretation of Force Majeure in contract law",
+      "Find relevant citations for domestic violence protection orders",
+      "Analyze recent cyber crime legislation and landmark judgments"
+    ] 
+  },
+  { 
+    category: "Contract Review", 
+    icon: FileText,
+    prompts: [
+      "Analyze this contract for potential risks, liabilities, and unfavorable clauses",
+      "Review this NDA for loopholes and suggest improvements",
+      "Examine this service agreement and identify areas of concern",
+      "Redline this partnership agreement with suggested modifications",
+      "Review this licensing agreement for intellectual property protection",
+      "Analyze this loan agreement for hidden charges and penalties",
+      "Check this employment contract for compliance with labor laws"
+    ] 
+  },
+  { 
+    category: "Case Strategy", 
+    icon: Lightbulb,
+    prompts: [
+      "Develop a comprehensive litigation strategy for a property dispute case",
+      "Create a defense strategy for a criminal case with circumstantial evidence",
+      "Plan a negotiation approach for an out-of-court settlement",
+      "Design a mediation strategy for a family law dispute",
+      "Formulate arguments for anticipatory bail application",
+      "Create examination and cross-examination questions for key witnesses",
+      "Develop a strategy for challenging an arbitral award"
+    ] 
+  },
+  { 
+    category: "Case Analysis", 
+    icon: Scale,
+    prompts: [
+      "Analyze the strengths and weaknesses of my civil suit case",
+      "Evaluate the probability of success in this criminal appeal",
+      "Identify potential challenges in this divorce settlement case",
+      "Assess the risk factors in this corporate litigation",
+      "Analyze the evidence quality in this insurance claim dispute",
+      "Evaluate the legal grounds for filing a writ petition",
+      "Review the chances of success in this consumer complaint"
+    ] 
+  },
+  { 
+    category: "Client Communication", 
+    icon: Users,
+    prompts: [
+      "Draft an email to client explaining case status and next steps",
+      "Write a formal letter to opposing counsel for settlement discussions",
+      "Create a client advisory on recent legal developments affecting their business",
+      "Prepare a fee agreement letter with payment terms and scope of work",
+      "Draft a notice to client regarding upcoming court hearing",
+      "Write a status update on pending litigation matters",
+      "Create a client briefing document for complex legal procedures"
+    ] 
+  },
+  { 
+    category: "Recent Client Requests", 
+    icon: Clock,
+    prompts: [
+      "Summarize key provisions of the new Data Protection Act 2023",
+      "Explain the process of filing a PIL in High Court with requirements",
+      "Guide on trademark registration process and timeline in India",
+      "Explain GST implications for e-commerce businesses",
+      "Summarize rights of accused under criminal procedure code",
+      "Explain the procedure for company incorporation under Companies Act",
+      "Guide on property registration and stamp duty requirements"
+    ] 
+  },
+  { 
+    category: "Most Popular", 
+    icon: Star,
+    prompts: [
+      "Create a comprehensive case brief with facts, issues, arguments, and precedents",
+      "Draft a petition for anticipatory bail with grounds and case laws",
+      "Prepare written submissions for final arguments in civil suit",
+      "Analyze this judgment and extract key legal principles and ratios",
+      "Draft a reply to legal notice with point-by-point rebuttal",
+      "Create a detailed chronology of events for case documentation",
+      "Prepare a legal opinion on contractual obligations and breach"
+    ] 
+  }
 ];
 
 const sampleMessages = [
@@ -37,10 +132,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
   const [messages, setMessages] = useState(sampleMessages);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [isAutomatic, setIsAutomatic] = useState(true);
-  const [selectedMode, setSelectedMode] = useState("ask");
   const [showPromptLibrary, setShowPromptLibrary] = useState(false);
-  const [showModeSelector, setShowModeSelector] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -51,25 +143,39 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
     scrollToBottom();
   }, [messages]);
 
+  const handleEnhancePrompt = () => {
+    if (!input.trim()) return;
+    
+    // Enhance the prompt by making it more detailed and professional
+    const enhancements = [
+      `Please provide a comprehensive analysis of: ${input}. Include relevant statutory provisions, case law precedents, and practical implications.`,
+      `I need detailed guidance on: ${input}. Please cover all legal aspects, applicable laws, procedural requirements, and strategic recommendations.`,
+      `Regarding ${input}, please provide an in-depth legal analysis with citations, precedents, risk assessment, and step-by-step guidance.`,
+      `I require professional assistance with: ${input}. Please include relevant sections of law, landmark judgments, compliance requirements, and best practices.`
+    ];
+    
+    const enhanced = enhancements[Math.floor(Math.random() * enhancements.length)];
+    setInput(enhanced);
+  };
+
   const handleSend = () => {
     if (!input.trim()) return;
-    const modeLabel = actionModes.find(m => m.id === selectedMode)?.label || "Ask";
-    setMessages([...messages, { role: "user", content: `[${modeLabel}] ${input}` }]);
+    setMessages([...messages, { role: "user", content: input }]);
     setInput("");
     setIsTyping(true);
     
     setTimeout(() => {
       setIsTyping(false);
-      const responses: Record<string, string> = {
-        ask: "Based on your query, I've analyzed the relevant legal provisions. The key points to consider are the applicable statutes and their interpretations in similar cases.",
-        research: "I've conducted comprehensive research on this matter. Here are the relevant Supreme Court judgments and High Court decisions that may be applicable to your case.",
-        draft: "I've prepared a draft based on your requirements. Please review the document structure and let me know if you'd like any modifications."
-      };
+      const responses = [
+        "Based on your query, I've analyzed the relevant legal provisions. The key points to consider are the applicable statutes, recent amendments, and their interpretations in similar cases. Would you like me to elaborate on any specific aspect?",
+        "I've reviewed this matter carefully. Here's a comprehensive analysis with relevant case law references, statutory provisions, and practical recommendations for proceeding with your case.",
+        "After analyzing your request, I can provide detailed guidance. This involves multiple legal considerations including procedural requirements, substantive law provisions, and strategic approaches. Let me break this down for you."
+      ];
       setMessages(prev => [...prev, {
         role: "assistant",
-        content: responses[selectedMode]
+        content: responses[Math.floor(Math.random() * responses.length)]
       }]);
-    }, 1500);
+    }, 2000);
   };
 
   const handlePromptSelect = (prompt: string) => {
@@ -111,7 +217,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
                   }}
                   transition={{ duration: 3, repeat: Infinity }}
                 >
-                  <Crown className="w-6 h-6 text-primary" />
+                  <Bot className="w-6 h-6 text-primary" />
                   <motion.div 
                     className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-green-500 border-2 border-card"
                     animate={{ scale: [1, 1.2, 1] }}
@@ -127,6 +233,15 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
                 </div>
               </div>
               <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" className="gap-1.5 h-8 text-xs border-border/50 hover:bg-muted hidden md:flex">
+                  <Bot className="w-3.5 h-3.5" />
+                  Get Lawyer Support
+                </Button>
+                <Button size="sm" className="gap-1.5 h-8 text-xs bg-primary hover:bg-primary/90 hidden md:flex">
+                  <Plus className="w-3.5 h-3.5" />
+                  New Draft
+                </Button>
+                <div className="w-px h-6 bg-border mx-1 hidden md:block" />
                 <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-primary/10">
                   <History className="w-4 h-4" />
                 </Button>
@@ -136,57 +251,6 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
                 <Button size="icon" variant="ghost" onClick={onClose} className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-destructive/10 hover:text-destructive">
                   <X className="w-4 h-4" />
                 </Button>
-              </div>
-            </div>
-
-            {/* Mode Selector Bar */}
-            <div className="px-4 py-3 border-b border-border/30 bg-muted/20">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-medium text-muted-foreground">Mode:</span>
-                  <div className="flex items-center gap-1 bg-muted/50 rounded-lg p-1">
-                    <button
-                      onClick={() => setIsAutomatic(true)}
-                      className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
-                        isAutomatic 
-                          ? "bg-primary text-primary-foreground shadow-sm" 
-                          : "text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      Automatic
-                    </button>
-                    <button
-                      onClick={() => setIsAutomatic(false)}
-                      className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
-                        !isAutomatic 
-                          ? "bg-primary text-primary-foreground shadow-sm" 
-                          : "text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      Manual
-                    </button>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Action Mode Buttons */}
-              <div className="flex gap-2">
-                {actionModes.map((mode) => (
-                  <motion.button
-                    key={mode.id}
-                    whileHover={{ scale: 1.02, y: -1 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => setSelectedMode(mode.id)}
-                    className={`flex-1 flex flex-col items-center gap-1 p-3 rounded-xl border transition-all ${
-                      selectedMode === mode.id
-                        ? "bg-primary/10 border-primary/50 text-primary shadow-md shadow-primary/10"
-                        : "bg-card/50 border-border/50 text-muted-foreground hover:border-primary/30 hover:bg-primary/5"
-                    }`}
-                  >
-                    <mode.icon className={`w-5 h-5 ${selectedMode === mode.id ? "text-primary" : ""}`} />
-                    <span className="text-xs font-semibold">{mode.label}</span>
-                  </motion.button>
-                ))}
               </div>
             </div>
 
@@ -209,7 +273,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
                     {message.role === "assistant" && (
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
-                          <Crown className="w-3 h-3 text-primary" />
+                          <Bot className="w-3 h-3 text-primary" />
                         </div>
                         <span className="text-xs font-semibold text-primary">Yugality AI</span>
                         <Star className="w-3 h-3 text-primary/50" />
@@ -232,7 +296,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
                     <div className="bg-gradient-to-br from-card via-card to-muted/30 text-foreground border border-primary/20 rounded-2xl rounded-bl-md p-4 shadow-lg">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
-                          <Crown className="w-3 h-3 text-primary" />
+                          <Bot className="w-3 h-3 text-primary" />
                         </div>
                         <span className="text-xs font-semibold text-primary">Yugality AI</span>
                       </div>
@@ -338,7 +402,7 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                  placeholder={`${actionModes.find(m => m.id === selectedMode)?.label || 'Ask'} anything...`}
+                  placeholder="Ask anything about your legal matters..."
                   className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm placeholder:text-muted-foreground/60"
                 />
                 
@@ -349,6 +413,18 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
                   className="h-9 w-9 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-xl shrink-0"
                 >
                   <Mic className="w-4 h-4" />
+                </Button>
+                
+                {/* Enhance Prompt Button */}
+                <Button 
+                  size="icon" 
+                  variant="ghost"
+                  onClick={handleEnhancePrompt}
+                  disabled={!input.trim()}
+                  className="h-9 w-9 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-xl shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+                  title="Enhance your prompt"
+                >
+                  <Wand2 className="w-4 h-4" />
                 </Button>
                 
                 {/* Send Button */}
@@ -365,11 +441,11 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
               
               {/* Footer */}
               <div className="flex items-center justify-center gap-2 mt-3">
-                <Crown className="w-3 h-3 text-primary/50" />
+                <Sparkles className="w-3 h-3 text-primary/50" />
                 <p className="text-[10px] text-muted-foreground">
                   Powered by <span className="font-semibold text-primary">Yugality AI</span> • Private & Secure
                 </p>
-                <Crown className="w-3 h-3 text-primary/50" />
+                <Sparkles className="w-3 h-3 text-primary/50" />
               </div>
             </div>
 

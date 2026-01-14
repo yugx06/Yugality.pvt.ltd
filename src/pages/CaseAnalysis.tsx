@@ -5,6 +5,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart as RechartsPieChart, Pie, Cell, BarChart, Bar, RadialBarChart, RadialBar, Legend
 } from "recharts";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const cases = [
   {
@@ -51,16 +52,60 @@ const cases = [
     status: "active",
     risk: "medium",
   },
+  {
+    id: 5,
+    name: "Reddy Enterprises vs. Tax Department",
+    type: "Tax Appeal",
+    court: "ITAT Mumbai",
+    stage: "Final Arguments",
+    progress: 85,
+    nextDate: "Jan 8, 2026",
+    status: "active",
+    risk: "low",
+  },
+  {
+    id: 6,
+    name: "Gupta vs. Real Estate Corp",
+    type: "Property Dispute",
+    court: "High Court Delhi",
+    stage: "Evidence",
+    progress: 55,
+    nextDate: "Jan 12, 2026",
+    status: "active",
+    risk: "medium",
+  },
+  {
+    id: 7,
+    name: "Tech Solutions Inc vs. Competitor Ltd",
+    type: "IP Litigation",
+    court: "IPAB Chennai",
+    stage: "Cross Examination",
+    progress: 60,
+    nextDate: "Jan 15, 2026",
+    status: "active",
+    risk: "high",
+  },
+  {
+    id: 8,
+    name: "Mehta vs. State Insurance Co",
+    type: "Insurance Claim",
+    court: "Consumer Forum",
+    stage: "Mediation",
+    progress: 40,
+    nextDate: "Jan 18, 2026",
+    status: "active",
+    risk: "low",
+  },
 ];
 
 // Chart data
 const casesByMonth = [
-  { month: "Aug", won: 4, lost: 1, ongoing: 8 },
-  { month: "Sep", won: 3, lost: 2, ongoing: 10 },
-  { month: "Oct", won: 5, lost: 0, ongoing: 12 },
-  { month: "Nov", won: 2, lost: 1, ongoing: 15 },
-  { month: "Dec", won: 4, lost: 1, ongoing: 18 },
-  { month: "Jan", won: 0, lost: 0, ongoing: 24 },
+  { month: "Aug", won: 4, ongoing: 8 },
+  { month: "Sep", won: 3, ongoing: 10 },
+  { month: "Oct", won: 5, ongoing: 12 },
+  { month: "Nov", won: 2, ongoing: 15 },
+  { month: "Dec", won: 4, ongoing: 18 },
+  { month: "Jan", won: 0, ongoing: 24 },
 ];
 
 const caseTypeDistribution = [
@@ -79,7 +124,7 @@ const courtDistribution = [
 ];
 
 const successRateData = [
-  { name: "Win Rate", value: 78, fill: "hsl(43, 55%, 48%)" },
+  { name: "Success Rate", value: 85, fill: "hsl(43, 55%, 48%)" },
 ];
 
 const containerVariants = {
@@ -96,6 +141,7 @@ const itemVariants = {
 };
 
 const CaseAnalysis = () => {
+  const { t } = useLanguage();
   const getRiskColor = (risk: string) => {
     switch (risk) {
       case "high": return "text-destructive";
@@ -125,25 +171,25 @@ const CaseAnalysis = () => {
         {/* Header */}
         <motion.div variants={itemVariants} className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Case Analysis</h1>
-            <p className="text-muted-foreground text-sm mt-1">Track progress and insights for all your cases</p>
+            <h1 className="text-2xl font-bold text-foreground">{t("Case Analysis")}</h1>
+            <p className="text-muted-foreground text-sm mt-1">{t("Track progress and insights for all your cases")}</p>
           </div>
           <motion.div 
             className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-lg border border-primary/20"
             whileHover={{ scale: 1.02 }}
           >
             <Activity className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">Live Analytics</span>
+            <span className="text-sm font-medium text-primary">{t("Live Analytics")}</span>
           </motion.div>
         </motion.div>
 
         {/* Summary Stats */}
         <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: "Active Cases", value: "24", icon: Scale, color: "text-primary", bg: "bg-primary/10" },
-            { label: "Won This Year", value: "18", icon: CheckCircle, color: "text-tech", bg: "bg-tech/10" },
-            { label: "High Risk", value: "3", icon: AlertCircle, color: "text-destructive", bg: "bg-destructive/10" },
-            { label: "Pending Verdict", value: "5", icon: Clock, color: "text-tech", bg: "bg-tech/10" },
+            { label: "Cases Won", value: "18", icon: CheckCircle, color: "text-green-500", bg: "bg-green-500/10" },
+            { label: "Total Clients", value: "8", icon: Scale, color: "text-blue-500", bg: "bg-blue-500/10" },
+            { label: "Documents Filed", value: "14", icon: Gavel, color: "text-purple-500", bg: "bg-purple-500/10" },
+            { label: "Years of Practice", value: "15", icon: TrendingUp, color: "text-amber-500", bg: "bg-amber-500/10" },
           ].map((stat, index) => (
             <motion.div 
               key={stat.label} 
@@ -155,7 +201,7 @@ const CaseAnalysis = () => {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-muted-foreground">{stat.label}</p>
+                  <p className="text-xs text-muted-foreground">{t(stat.label)}</p>
                   <motion.p 
                     className="text-2xl font-bold text-foreground mt-1"
                     initial={{ scale: 0 }}
@@ -192,22 +238,18 @@ const CaseAnalysis = () => {
                   <BarChart3 className="w-5 h-5 text-primary" />
                 </motion.div>
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground">Case Trends</h3>
-                  <p className="text-xs text-muted-foreground">Last 6 months performance</p>
+                  <h3 className="text-lg font-semibold text-foreground">{t("Case Trends")}</h3>
+                  <p className="text-xs text-muted-foreground">{t("Last 6 months performance")}</p>
                 </div>
               </div>
               <div className="flex items-center gap-4 text-xs">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-tech" />
-                  <span className="text-muted-foreground">Won</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-destructive" />
-                  <span className="text-muted-foreground">Lost</span>
+                  <span className="text-muted-foreground">{t("Won")}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-primary" />
-                  <span className="text-muted-foreground">Ongoing</span>
+                  <span className="text-muted-foreground">{t("Ongoing")}</span>
                 </div>
               </div>
             </div>
@@ -317,20 +359,13 @@ const CaseAnalysis = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 mt-4">
+            <div className="mt-4">
               <motion.div 
-                className="p-3 rounded-lg bg-tech/10 text-center"
+                className="p-4 rounded-lg bg-tech/10 text-center"
                 whileHover={{ scale: 1.03 }}
               >
-                <p className="text-lg font-bold text-tech">18</p>
+                <p className="text-2xl font-bold text-tech">18</p>
                 <p className="text-xs text-muted-foreground">Cases Won</p>
-              </motion.div>
-              <motion.div 
-                className="p-3 rounded-lg bg-destructive/10 text-center"
-                whileHover={{ scale: 1.03 }}
-              >
-                <p className="text-lg font-bold text-destructive">5</p>
-                <p className="text-xs text-muted-foreground">Cases Lost</p>
               </motion.div>
             </div>
           </motion.div>
@@ -472,7 +507,7 @@ const CaseAnalysis = () => {
                       className={`text-xs px-2.5 py-1 rounded-full border ${getRiskBg(caseItem.risk)} ${getRiskColor(caseItem.risk)}`}
                       whileHover={{ scale: 1.1 }}
                     >
-                      {caseItem.risk.toUpperCase()} RISK
+                      URGENT
                     </motion.span>
                   </div>
                   <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">

@@ -2,7 +2,10 @@ import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { 
   User, Camera, Mail, Phone, MapPin, Briefcase, Calendar, 
-  Shield, Crown, Save, Edit2, Check, X, Upload, Sparkles
+  Shield, Save, Edit2, Check, X, Upload, Sparkles,
+  Award, GraduationCap, TrendingUp, FileText, Star, Clock,
+  CheckCircle, AlertCircle, Building, Linkedin, MessageCircle, 
+  Download, ExternalLink
 } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -18,22 +21,25 @@ import { useToast } from "@/hooks/use-toast";
 
 const roleConfig = {
   lawyer: {
-    gradient: "from-amber-500 via-yellow-500 to-orange-500",
-    bgGradient: "from-amber-900/20 via-yellow-900/10 to-orange-900/20",
+    gradient: "from-gray-900 via-gray-800 to-black",
+    bgGradient: "from-gray-900/20 via-gray-800/10 to-black/20",
     title: "Senior Advocate",
-    icon: Crown
+    icon: Star,
+    defaultImage: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400&h=400&fit=crop&crop=face"
   },
   client: {
-    gradient: "from-emerald-500 via-teal-500 to-cyan-500",
-    bgGradient: "from-emerald-900/20 via-teal-900/10 to-cyan-900/20",
+    gradient: "from-gray-900 via-gray-800 to-gray-700",
+    bgGradient: "from-gray-900/20 via-gray-800/10 to-gray-700/20",
     title: "Valued Client",
-    icon: User
+    icon: User,
+    defaultImage: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face"
   },
   admin: {
-    gradient: "from-purple-500 via-violet-500 to-indigo-500",
-    bgGradient: "from-purple-900/20 via-violet-900/10 to-indigo-900/20",
+    gradient: "from-gray-900 via-gray-800 to-black",
+    bgGradient: "from-gray-900/20 via-gray-800/10 to-black/20",
     title: "System Administrator",
-    icon: Shield
+    icon: Shield,
+    defaultImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face"
   }
 };
 
@@ -56,12 +62,15 @@ const Profile = () => {
       name: user?.name || "",
       email: user?.email || "",
       phone: "+91 98765 43210",
+      whatsapp: "+91 98765 43210",
       location: "Mumbai, Maharashtra",
       bio: "Experienced legal professional with a passion for justice and client advocacy.",
       specialization: user?.role === 'lawyer' ? "Corporate Law, Civil Litigation" : "",
       barCouncilId: user?.role === 'lawyer' ? "MH/1234/2015" : "",
       experience: user?.role === 'lawyer' ? "12 years" : "",
-      joinedDate: "January 2024"
+      joinedDate: "January 2024",
+      linkedin: user?.role === 'lawyer' ? "linkedin.com/in/adv-rajesh-kumar" : "linkedin.com/in/profile",
+      resumeUrl: user?.role === 'lawyer' ? "/documents/resume_adv_kumar.pdf" : ""
     };
   });
 
@@ -137,9 +146,9 @@ const Profile = () => {
                 className="relative inline-block"
               >
                 <Avatar className="w-32 h-32 border-4 border-background shadow-xl">
-                  <AvatarImage src={avatar || undefined} />
-                  <AvatarFallback className={`bg-gradient-to-br ${config.gradient} text-white text-4xl font-bold`}>
-                    {formData.name?.charAt(0) || 'U'}
+                  <AvatarImage src={avatar || config.defaultImage} alt={formData.name} className="object-cover" />
+                  <AvatarFallback>
+                    <img src={config.defaultImage} alt={formData.name} className="w-full h-full object-cover" />
                   </AvatarFallback>
                 </Avatar>
                 <input
@@ -275,11 +284,158 @@ const Profile = () => {
             </Card>
           </motion.div>
 
-          {/* Professional Information (for lawyers) or Account Info */}
+          {/* Contact & Social Links */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.15 }}
+          >
+            <Card className="border-border">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <ExternalLink className="w-5 h-5 text-primary" />
+                  Contact & Social Links
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="whatsapp" className="flex items-center gap-2">
+                    <MessageCircle className="w-4 h-4 text-green-500" /> WhatsApp
+                  </Label>
+                  {isEditing ? (
+                    <Input
+                      id="whatsapp"
+                      value={formData.whatsapp}
+                      onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
+                      className="bg-muted/50"
+                      placeholder="+91 98765 43210"
+                    />
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <p className="text-foreground">{formData.whatsapp}</p>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-7 text-xs"
+                        onClick={() => window.open(`https://wa.me/${formData.whatsapp.replace(/[^0-9]/g, '')}`, '_blank')}
+                      >
+                        <MessageCircle className="w-3 h-3 mr-1" /> Message
+                      </Button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="linkedin" className="flex items-center gap-2">
+                    <Linkedin className="w-4 h-4 text-blue-600" /> LinkedIn Profile
+                  </Label>
+                  {isEditing ? (
+                    <Input
+                      id="linkedin"
+                      value={formData.linkedin}
+                      onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
+                      className="bg-muted/50"
+                      placeholder="linkedin.com/in/yourprofile"
+                    />
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <p className="text-foreground text-sm">{formData.linkedin}</p>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-7 text-xs"
+                        onClick={() => window.open(`https://${formData.linkedin}`, '_blank')}
+                      >
+                        <ExternalLink className="w-3 h-3 mr-1" /> Visit
+                      </Button>
+                    </div>
+                  )}
+                </div>
+
+                {user?.role === 'lawyer' && (
+                  <div className="space-y-2">
+                    <Label htmlFor="resume" className="flex items-center gap-2">
+                      <Download className="w-4 h-4 text-purple-500" /> Resume / CV
+                    </Label>
+                    {isEditing ? (
+                      <div className="flex gap-2">
+                        <Input
+                          id="resume"
+                          value={formData.resumeUrl}
+                          onChange={(e) => setFormData({ ...formData, resumeUrl: e.target.value })}
+                          className="bg-muted/50 flex-1"
+                          placeholder="/documents/resume.pdf"
+                        />
+                        <Button size="sm" variant="outline">
+                          <Upload className="w-3 h-3 mr-1" /> Upload
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <p className="text-foreground text-sm">resume_adv_kumar.pdf</p>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 text-xs"
+                          onClick={() => {
+                            toast({
+                              title: "Downloading Resume",
+                              description: "Your resume is being downloaded.",
+                            });
+                          }}
+                        >
+                          <Download className="w-3 h-3 mr-1" /> Download
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <Separator className="my-4" />
+
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2 text-muted-foreground">
+                    <Mail className="w-4 h-4" /> Quick Actions
+                  </Label>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 text-xs"
+                      onClick={() => window.location.href = `mailto:${formData.email}`}
+                    >
+                      <Mail className="w-3 h-3 mr-1" /> Send Email
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 text-xs"
+                      onClick={() => window.location.href = `tel:${formData.phone}`}
+                    >
+                      <Phone className="w-3 h-3 mr-1" /> Call
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 text-xs"
+                      onClick={() => window.open(`https://wa.me/${formData.whatsapp.replace(/[^0-9]/g, '')}`, '_blank')}
+                    >
+                      <MessageCircle className="w-3 h-3 mr-1" /> WhatsApp
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        {/* Details Grid */}
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Professional Information (for lawyers) or Account Info */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
           >
             <Card className="border-border">
               <CardHeader>
@@ -396,29 +552,342 @@ const Profile = () => {
         >
           {user?.role === 'lawyer' && (
             <>
-              <StatCard label="Cases Won" value="156" icon={Check} color="text-green-500 bg-green-500/10" />
-              <StatCard label="Total Clients" value="89" icon={User} color="text-blue-500 bg-blue-500/10" />
-              <StatCard label="Documents" value="1.2K" icon={Briefcase} color="text-purple-500 bg-purple-500/10" />
-              <StatCard label="Experience" value="12 Yrs" icon={Calendar} color="text-amber-500 bg-amber-500/10" />
+              <StatCard label="Cases Won" value="16" icon={Check} color="text-green-500 bg-green-500/10" />
+              <StatCard label="Total Clients" value="8" icon={User} color="text-blue-500 bg-blue-500/10" />
+              <StatCard label="Documents" value="14" icon={Briefcase} color="text-purple-500 bg-purple-500/10" />
+              <StatCard label="Experience" value="15 Yrs" icon={Calendar} color="text-amber-500 bg-amber-500/10" />
             </>
           )}
           {user?.role === 'client' && (
             <>
               <StatCard label="Active Cases" value="3" icon={Briefcase} color="text-blue-500 bg-blue-500/10" />
-              <StatCard label="Documents" value="24" icon={Briefcase} color="text-purple-500 bg-purple-500/10" />
-              <StatCard label="Hearings" value="5" icon={Calendar} color="text-amber-500 bg-amber-500/10" />
-              <StatCard label="Messages" value="12" icon={Mail} color="text-green-500 bg-green-500/10" />
+              <StatCard label="Documents" value="14" icon={Briefcase} color="text-purple-500 bg-purple-500/10" />
+              <StatCard label="Hearings" value="2" icon={Calendar} color="text-amber-500 bg-amber-500/10" />
+              <StatCard label="Satisfaction" value="95%" icon={Shield} color="text-green-500 bg-green-500/10" />
             </>
           )}
           {user?.role === 'admin' && (
             <>
-              <StatCard label="Total Users" value="234" icon={User} color="text-blue-500 bg-blue-500/10" />
-              <StatCard label="Active Cases" value="89" icon={Briefcase} color="text-purple-500 bg-purple-500/10" />
-              <StatCard label="System Health" value="99.9%" icon={Shield} color="text-green-500 bg-green-500/10" />
+              <StatCard label="Total Users" value="34" icon={User} color="text-blue-500 bg-blue-500/10" />
+              <StatCard label="Active Cases" value="9" icon={Briefcase} color="text-purple-500 bg-purple-500/10" />
+              <StatCard label="System Health" value="98.9%" icon={Shield} color="text-green-500 bg-green-500/10" />
               <StatCard label="Uptime" value="30 Days" icon={Calendar} color="text-amber-500 bg-amber-500/10" />
             </>
           )}
         </motion.div>
+
+        {/* Additional Sections */}
+        {user?.role === 'lawyer' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            {/* Achievements */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <Card className="border-border">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Award className="w-5 h-5 text-amber-500" />
+                    Achievements & Awards
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {[
+                    { title: "Best Lawyer Award 2024", org: "Bar Council of India", date: "Dec 2024", description: "Outstanding contribution to legal profession" },
+                    { title: "Excellence in Corporate Law", org: "Legal Excellence Forum", date: "Aug 2024", description: "Landmark corporate litigation victories" },
+                    { title: "Top 100 Advocates", org: "Indian Law Society", date: "Jan 2024", description: "Ranked #23 among top advocates" },
+                    { title: "Pro Bono Service Award", org: "Mumbai Legal Aid Society", date: "Sep 2023", description: "500+ hours of free legal aid" },
+                    { title: "Legal Innovation Award", org: "Tech Law Forum", date: "Mar 2023", description: "Digital transformation in legal practice" },
+                  ].map((achievement, index) => (
+                    <div key={index} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 border border-border">
+                      <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center flex-shrink-0">
+                        <Star className="w-5 h-5 text-amber-500" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium text-foreground text-sm">{achievement.title}</p>
+                        <p className="text-xs text-muted-foreground">{achievement.org}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{achievement.date}</p>
+                        {(achievement as any).description && (
+                          <p className="text-xs text-muted-foreground mt-1 italic">{(achievement as any).description}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Certifications */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <Card className="border-border">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <GraduationCap className="w-5 h-5 text-blue-500" />
+                    Education & Certifications
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {[
+                    { title: "LLM in Corporate Law", institution: "Harvard Law School", year: "2015", grade: "Distinction" },
+                    { title: "LLB (Hons.)", institution: "National Law School of India", year: "2012", grade: "First Class" },
+                    { title: "Certified Mediator", institution: "Indian Mediation Institute", year: "2018", grade: "Level 3" },
+                    { title: "Cyber Law Certification", institution: "NALSAR University", year: "2020", grade: "Advanced" },
+                    { title: "Arbitration Practitioner", institution: "London Court of Arbitration", year: "2019", grade: "Certified" },
+                  ].map((cert, index) => (
+                    <div key={index} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 border border-border">
+                      <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                        <GraduationCap className="w-5 h-5 text-blue-500" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium text-foreground text-sm">{cert.title}</p>
+                        <p className="text-xs text-muted-foreground">{cert.institution}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <p className="text-xs text-muted-foreground">{cert.year}</p>
+                          {(cert as any).grade && (
+                            <Badge variant="secondary" className="text-[10px] h-4 px-1">{(cert as any).grade}</Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Practice Areas */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <Card className="border-border">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Building className="w-5 h-5 text-purple-500" />
+                    Practice Areas
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      "Corporate Law",
+                      "Civil Litigation",
+                      "Criminal Defense",
+                      "Property Law",
+                      "Family Law",
+                      "Tax Law",
+                      "Intellectual Property",
+                      "Contract Law",
+                      "Cyber Law",
+                      "Banking & Finance",
+                      "Arbitration",
+                      "Consumer Protection",
+                      "Labour Law",
+                      "Environmental Law",
+                      "Real Estate",
+                      "Immigration Law"
+                    ].map((area, index) => (
+                      <Badge key={index} variant="outline" className="text-sm border-purple-500/30 text-purple-500">
+                        {area}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Performance Metrics */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+            >
+              <Card className="border-border">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <TrendingUp className="w-5 h-5 text-green-500" />
+                    Performance Metrics
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Success Rate</span>
+                      <span className="font-bold text-green-500">85%</span>
+                    </div>
+                    <div className="w-full bg-muted rounded-full h-2">
+                      <div className="bg-green-500 h-2 rounded-full" style={{ width: '85%' }} />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Client Satisfaction</span>
+                      <span className="font-bold text-blue-500">92%</span>
+                    </div>
+                    <div className="w-full bg-muted rounded-full h-2">
+                      <div className="bg-blue-500 h-2 rounded-full" style={{ width: '92%' }} />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Case Resolution Time</span>
+                      <span className="font-bold text-amber-500">Fast</span>
+                    </div>
+                    <div className="w-full bg-muted rounded-full h-2">
+                      <div className="bg-amber-500 h-2 rounded-full" style={{ width: '78%' }} />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+        )}
+
+        {user?.role === 'client' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            {/* Active Cases */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <Card className="border-border">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <FileText className="w-5 h-5 text-blue-500" />
+                    Active Cases
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {[
+                    { title: "Property Dispute - Plot #247", status: "In Progress", progress: 65, advocate: "Adv. Rajesh Kumar", caseNo: "DC/2024/1245", nextHearing: "Jan 15, 2026" },
+                    { title: "Consumer Complaint - E-commerce", status: "Under Review", progress: 30, advocate: "Adv. Priya Sharma", caseNo: "CF/2025/0089", nextHearing: "Jan 20, 2026" },
+                    { title: "Insurance Claim Settlement", status: "Pending", progress: 15, advocate: "Adv. Rajesh Kumar", caseNo: "IC/2025/0456", nextHearing: "Jan 28, 2026" },
+                    { title: "Employment Dispute Resolution", status: "Mediation", progress: 45, advocate: "Adv. Meera Desai", caseNo: "LC/2024/7890", nextHearing: "Jan 18, 2026" },
+                  ].map((caseItem, index) => (
+                    <div key={index} className="p-3 rounded-lg bg-muted/30 border border-border">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1">
+                          <p className="font-medium text-foreground text-sm">{caseItem.title}</p>
+                          <p className="text-xs text-muted-foreground">Case: {(caseItem as any).caseNo}</p>
+                          <p className="text-xs text-muted-foreground">Advocate: {caseItem.advocate}</p>
+                          <p className="text-xs text-amber-600 mt-1">Next Hearing: {(caseItem as any).nextHearing}</p>
+                        </div>
+                        <Badge variant="outline" className="text-xs flex-shrink-0">
+                          {caseItem.status}
+                        </Badge>
+                      </div>
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-xs">
+                          <span className="text-muted-foreground">Progress</span>
+                          <span className="font-medium">{caseItem.progress}%</span>
+                        </div>
+                        <div className="w-full bg-muted rounded-full h-2">
+                          <div className="bg-emerald-500 h-2 rounded-full transition-all" style={{ width: `${caseItem.progress}%` }} />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Recent Activity */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <Card className="border-border">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Clock className="w-5 h-5 text-cyan-500" />
+                    Recent Activity
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {[
+                    { action: "Document uploaded", detail: "Property Sale Agreement (Final Draft)", time: "2 hours ago", icon: FileText, color: "cyan" },
+                    { action: "Consultation scheduled", detail: "Video call with Adv. Rajesh Kumar", time: "1 day ago", icon: Calendar, color: "blue" },
+                    { action: "Payment completed", detail: "Legal consultation fee ₹3,500", time: "3 days ago", icon: CheckCircle, color: "green" },
+                    { action: "Case update received", detail: "Property Dispute - Court date set", time: "4 days ago", icon: AlertCircle, color: "amber" },
+                    { action: "Message from advocate", detail: "Document review completed", time: "5 days ago", icon: Mail, color: "purple" },
+                    { action: "E-signature completed", detail: "POA Document signed digitally", time: "1 week ago", icon: CheckCircle, color: "green" },
+                  ].map((activity, index) => (
+                    <div key={index} className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/30 transition-colors">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                        activity.color === 'cyan' ? 'bg-cyan-500/10' :
+                        activity.color === 'blue' ? 'bg-blue-500/10' :
+                        activity.color === 'green' ? 'bg-green-500/10' :
+                        activity.color === 'amber' ? 'bg-amber-500/10' :
+                        'bg-purple-500/10'
+                      }`}>
+                        <activity.icon className={`w-4 h-4 ${
+                          activity.color === 'cyan' ? 'text-cyan-500' :
+                          activity.color === 'blue' ? 'text-blue-500' :
+                          activity.color === 'green' ? 'text-green-500' :
+                          activity.color === 'amber' ? 'text-amber-500' :
+                          'text-purple-500'
+                        }`} />
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground text-sm">{activity.action}</p>
+                        <p className="text-xs text-muted-foreground">{activity.detail}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{activity.time}</p>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Upcoming Hearings */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+            >
+              <Card className="border-border">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Calendar className="w-5 h-5 text-amber-500" />
+                    Upcoming Hearings
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {[
+                    { case: "Property Dispute - Plot #247", caseNo: "DC/2024/1245", date: "Jan 15, 2026", time: "10:30 AM", court: "District Court, Mumbai", room: "Court Room 3" },
+                    { case: "Consumer Complaint", caseNo: "CF/2025/0089", date: "Jan 20, 2026", time: "2:00 PM", court: "Consumer Forum, Andheri", room: "Hall B" },
+                    { case: "Employment Dispute", caseNo: "LC/2024/7890", date: "Jan 18, 2026", time: "11:00 AM", court: "Labour Court, BKC", room: "Mediation Room 1" },
+                    { case: "Insurance Claim", caseNo: "IC/2025/0456", date: "Jan 28, 2026", time: "3:30 PM", court: "Civil Court, Bandra", room: "Court Room 5" },
+                  ].map((hearing, index) => (
+                    <div key={index} className="p-3 rounded-lg bg-muted/30 border border-border">
+                      <div className="flex items-center gap-2 mb-2">
+                        <AlertCircle className="w-4 h-4 text-amber-500" />
+                        <div className="flex-1">
+                          <p className="font-medium text-foreground text-sm">{hearing.case}</p>
+                          <p className="text-xs text-muted-foreground">Case No: {(hearing as any).caseNo}</p>
+                        </div>
+                      </div>
+                      <div className="space-y-1 text-xs text-muted-foreground">
+                        <p className="flex items-center gap-2">
+                          <Calendar className="w-3 h-3" /> {hearing.date} at {hearing.time}
+                        </p>
+                        <p className="text-foreground font-medium">{hearing.court}</p>
+                        <p className="text-muted-foreground">{(hearing as any).room}</p>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+        )}
       </motion.div>
     </DashboardLayout>
   );

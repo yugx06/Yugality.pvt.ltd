@@ -2,30 +2,72 @@ import { motion, AnimatePresence } from "framer-motion";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { 
   FileText, Upload, Search, Filter, Grid, List, FileCheck, FileClock, 
-  AlertCircle, Eye, Download, Trash2, X, File, Image, FileSpreadsheet 
+  AlertCircle, Eye, Download, Trash2, X, File, Image, FileSpreadsheet, Plus, Edit, Copy 
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState, useCallback } from "react";
+import { Card } from "@/components/ui/card";
+import { useState, useCallback, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const documents = [
-  { id: 1, name: "Counter Affidavit - Patel Industries", case: "Patel Industries vs. SEBI", type: "Affidavit", status: "pending", date: "Jan 2, 2026", size: "2.4 MB", fileType: "pdf" },
-  { id: 2, name: "Evidence Bundle Vol. 1", case: "Singh vs. State of Maharashtra", type: "Evidence", status: "filed", date: "Jan 1, 2026", size: "15.8 MB", fileType: "pdf" },
-  { id: 3, name: "Legal Opinion - Property Rights", case: "Verma Property Dispute", type: "Opinion", status: "urgent", date: "Dec 30, 2025", size: "845 KB", fileType: "docx" },
-  { id: 4, name: "Settlement Agreement Draft v3", case: "Kumar vs. Kumar", type: "Agreement", status: "filed", date: "Dec 28, 2025", size: "1.2 MB", fileType: "pdf" },
-  { id: 5, name: "Witness Statement - Sharma", case: "Sharma vs. National Bank", type: "Statement", status: "pending", date: "Dec 26, 2025", size: "520 KB", fileType: "docx" },
-  { id: 6, name: "Court Order - Interim Relief", case: "Patel Industries vs. SEBI", type: "Order", status: "filed", date: "Dec 22, 2025", size: "340 KB", fileType: "pdf" },
+  { id: 1, name: "Counter Affidavit - Patel Industries", case: "Patel Industries vs. SEBI", type: "Affidavit", status: "pending", date: "Jan 2, 2026", size: "2.4 MB", fileType: "pdf", submittedBy: "Adv. Rajesh Kumar", submittedTo: "Client: Priya Sharma" },
+  { id: 2, name: "Evidence Bundle Vol. 1", case: "Singh vs. State of Maharashtra", type: "Evidence", status: "filed", date: "Jan 1, 2026", size: "15.8 MB", fileType: "pdf", submittedBy: "Client: Amit Singh", submittedTo: "Adv. Neha Verma" },
+  { id: 3, name: "Legal Opinion - Property Rights", case: "Verma Property Dispute", type: "Opinion", status: "urgent", date: "Dec 30, 2025", size: "845 KB", fileType: "docx", submittedBy: "Adv. Rajesh Kumar", submittedTo: "Client: Ravi Verma" },
+  { id: 4, name: "Settlement Agreement Draft v3", case: "Kumar vs. Kumar", type: "Agreement", status: "filed", date: "Dec 28, 2025", size: "1.2 MB", fileType: "pdf", submittedBy: "Client: Anjali Kumar", submittedTo: "Adv. Priya Sharma" },
+  { id: 5, name: "Witness Statement - Sharma", case: "Sharma vs. National Bank", type: "Statement", status: "pending", date: "Dec 26, 2025", size: "520 KB", fileType: "docx", submittedBy: "Adv. Neha Verma", submittedTo: "Court" },
+  { id: 6, name: "Court Order - Interim Relief", case: "Patel Industries vs. SEBI", type: "Order", status: "filed", date: "Dec 22, 2025", size: "340 KB", fileType: "pdf", submittedBy: "Court", submittedTo: "Adv. Rajesh Kumar" },
+];
+
+const contracts = [
+  { id: 1, name: "Service Agreement Template", description: "Standard service contract for client engagements", category: "Client Services", lastModified: "Jan 5, 2026", uses: 45 },
+  { id: 2, name: "Non-Disclosure Agreement (NDA)", description: "Mutual and unilateral NDA templates", category: "Confidentiality", lastModified: "Jan 4, 2026", uses: 89 },
+  { id: 3, name: "Employment Contract", description: "Employment agreement with standard terms", category: "Employment", lastModified: "Jan 3, 2026", uses: 23 },
+  { id: 4, name: "Partnership Deed", description: "Partnership agreement for business entities", category: "Business", lastModified: "Jan 2, 2026", uses: 12 },
+  { id: 5, name: "Lease Agreement", description: "Property lease contract template", category: "Property", lastModified: "Jan 1, 2026", uses: 34 },
+  { id: 6, name: "Vendor Agreement", description: "Standard vendor/supplier contract", category: "Procurement", lastModified: "Dec 30, 2025", uses: 56 },
+  { id: 7, name: "Sales Agreement", description: "Product/service sales contract", category: "Sales", lastModified: "Dec 29, 2025", uses: 67 },
+  { id: 8, name: "Consultancy Agreement", description: "Independent consultant engagement contract", category: "Services", lastModified: "Dec 28, 2025", uses: 41 },
+];
+
+const policyTemplates = [
+  { id: 1, name: "Privacy Policy", description: "GDPR and data protection compliant privacy policy", category: "Data Protection", lastModified: "Jan 6, 2026", uses: 120 },
+  { id: 2, name: "Terms & Conditions", description: "Website/app terms of service template", category: "Legal", lastModified: "Jan 5, 2026", uses: 98 },
+  { id: 3, name: "Refund Policy", description: "Product/service refund and return policy", category: "Commercial", lastModified: "Jan 4, 2026", uses: 76 },
+  { id: 4, name: "Cookie Policy", description: "Website cookie usage and consent policy", category: "Data Protection", lastModified: "Jan 3, 2026", uses: 87 },
+  { id: 5, name: "Workplace Policy", description: "Employee code of conduct and workplace rules", category: "HR", lastModified: "Jan 2, 2026", uses: 54 },
+  { id: 6, name: "Anti-Harassment Policy", description: "Workplace harassment prevention policy", category: "HR", lastModified: "Jan 1, 2026", uses: 43 },
+  { id: 7, name: "Data Retention Policy", description: "Data storage and deletion guidelines", category: "Data Protection", lastModified: "Dec 31, 2025", uses: 65 },
+  { id: 8, name: "Acceptable Use Policy", description: "IT and internet usage policy for employees", category: "IT", lastModified: "Dec 30, 2025", uses: 52 },
+  { id: 9, name: "Intellectual Property Policy", description: "IP ownership and protection guidelines", category: "Legal", lastModified: "Dec 29, 2025", uses: 38 },
+  { id: 10, name: "Social Media Policy", description: "Employee social media usage guidelines", category: "HR", lastModified: "Dec 28, 2025", uses: 29 },
 ];
 
 const filterOptions = ["All", "Affidavit", "Evidence", "Opinion", "Agreement", "Statement", "Order"];
 
 const Documents = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [isDragging, setIsDragging] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState<typeof documents[0] | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
+  const [activeSection, setActiveSection] = useState<"documents" | "contracts" | "policies">("documents");
+
+  useEffect(() => {
+    const hash = location.hash.substring(1);
+    if (hash === "contracts") {
+      setActiveSection("contracts");
+    } else if (hash === "policies") {
+      setActiveSection("policies");
+    } else {
+      setActiveSection("documents");
+    }
+  }, [location.hash]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -46,13 +88,24 @@ const Documents = () => {
   }, []);
 
   const getStatusBadge = (status: string) => {
+    const isClient = user?.role === 'client';
+    
     switch (status) {
       case "filed":
-        return <span className="status-filed flex items-center gap-1"><FileCheck className="w-3 h-3" /> Filed</span>;
+        return <span className="status-filed flex items-center gap-1">
+          <FileCheck className="w-3 h-3" /> 
+          {isClient ? "Submitted to Lawyer" : "Filed"}
+        </span>;
       case "pending":
-        return <span className="status-pending flex items-center gap-1"><FileClock className="w-3 h-3" /> Pending</span>;
+        return <span className="status-pending flex items-center gap-1">
+          <FileClock className="w-3 h-3" /> 
+          {isClient ? "Awaiting Upload" : "Pending Review"}
+        </span>;
       case "urgent":
-        return <span className="status-urgent flex items-center gap-1"><AlertCircle className="w-3 h-3" /> Urgent</span>;
+        return <span className="status-urgent flex items-center gap-1">
+          <AlertCircle className="w-3 h-3" /> 
+          {isClient ? "Urgent - Action Required" : "Urgent"}
+        </span>;
       default:
         return null;
     }
@@ -85,14 +138,66 @@ const Documents = () => {
           className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
         >
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Documents</h1>
-            <p className="text-muted-foreground text-sm mt-1">Manage and organize your legal documents</p>
+            <h1 className="text-2xl font-bold text-foreground">
+              {activeSection === "contracts" ? "Contract Templates" : 
+               activeSection === "policies" ? "Policy Templates" : "Documents"}
+            </h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              {activeSection === "contracts" ? "Ready-to-use contract templates for various legal needs" : 
+               activeSection === "policies" ? "Standard policy templates for compliance and governance" : 
+               "Manage and organize your legal documents"}
+            </p>
           </div>
           <Button className="yugality-button-gold gap-2">
-            <Upload className="w-4 h-4" /> Upload Document
+            <Upload className="w-4 h-4" /> 
+            {activeSection === "contracts" ? "New Contract" : 
+             activeSection === "policies" ? "New Policy" : "Upload Document"}
           </Button>
         </motion.div>
 
+        {/* Section Tabs */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex gap-2 border-b border-border pb-4"
+        >
+          <Button 
+            variant={activeSection === "documents" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => navigate("/documents")}
+            className={activeSection === "documents" ? "bg-primary" : ""}
+          >
+            <FileText className="w-4 h-4 mr-2" />
+            All Documents
+          </Button>
+          <Button 
+            variant={activeSection === "contracts" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => navigate("/documents#contracts")}
+            className={activeSection === "contracts" ? "bg-primary" : ""}
+          >
+            <File className="w-4 h-4 mr-2" />
+            Contracts
+          </Button>
+          <Button 
+            variant={activeSection === "policies" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => navigate("/documents#policies")}
+            className={activeSection === "policies" ? "bg-primary" : ""}
+          >
+            <FileCheck className="w-4 h-4 mr-2" />
+            Policy Templates
+          </Button>
+        </motion.div>
+
+        {/* Documents Section */}
+        {activeSection === "documents" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="space-y-6"
+          >
         {/* Filters & Search */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -211,6 +316,12 @@ const Documents = () => {
                 <tr>
                   <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Document</th>
                   <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider hidden md:table-cell">Case</th>
+                  {user?.role === 'admin' && (
+                    <>
+                      <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider hidden lg:table-cell">Submitted By</th>
+                      <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider hidden lg:table-cell">Submitted To</th>
+                    </>
+                  )}
                   <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider hidden lg:table-cell">Type</th>
                   <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
                   <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider hidden sm:table-cell">Date</th>
@@ -242,6 +353,16 @@ const Documents = () => {
                     <td className="px-6 py-4 hidden md:table-cell">
                       <p className="text-sm text-muted-foreground">{doc.case}</p>
                     </td>
+                    {user?.role === 'admin' && (
+                      <>
+                        <td className="px-6 py-4 hidden lg:table-cell">
+                          <p className="text-sm font-medium text-blue-600">{doc.submittedBy}</p>
+                        </td>
+                        <td className="px-6 py-4 hidden lg:table-cell">
+                          <p className="text-sm font-medium text-green-600">{doc.submittedTo}</p>
+                        </td>
+                      </>
+                    )}
                     <td className="px-6 py-4 hidden lg:table-cell">
                       <p className="text-sm text-muted-foreground">{doc.type}</p>
                     </td>
@@ -384,6 +505,106 @@ const Documents = () => {
             </>
           )}
         </AnimatePresence>
+          </motion.div>
+        )}
+
+        {/* Contracts Section */}
+        {activeSection === "contracts" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="space-y-6"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {contracts.map((contract, index) => (
+                <motion.div
+                  key={contract.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <Card className="p-5 hover:shadow-lg transition-all duration-300 border-border/50 hover:border-primary/30 cursor-pointer group">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <FileText className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <div className="flex gap-1">
+                        <Button size="icon" variant="ghost" className="h-8 w-8">
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button size="icon" variant="ghost" className="h-8 w-8">
+                          <Copy className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <h3 className="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">{contract.name}</h3>
+                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{contract.description}</p>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="px-2 py-1 rounded-md bg-muted text-muted-foreground">{contract.category}</span>
+                      <span className="text-muted-foreground">{contract.uses} uses</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">Modified {contract.lastModified}</p>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+            <div className="flex justify-center pt-4">
+              <Button variant="outline" className="gap-2">
+                <Plus className="w-4 h-4" /> Create New Contract Template
+              </Button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Policy Templates Section */}
+        {activeSection === "policies" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="space-y-6"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {policyTemplates.map((policy, index) => (
+                <motion.div
+                  key={policy.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <Card className="p-5 hover:shadow-lg transition-all duration-300 border-border/50 hover:border-primary/30 cursor-pointer group">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <FileCheck className="w-5 h-5 text-green-600" />
+                      </div>
+                      <div className="flex gap-1">
+                        <Button size="icon" variant="ghost" className="h-8 w-8">
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button size="icon" variant="ghost" className="h-8 w-8">
+                          <Copy className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <h3 className="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">{policy.name}</h3>
+                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{policy.description}</p>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="px-2 py-1 rounded-md bg-muted text-muted-foreground">{policy.category}</span>
+                      <span className="text-muted-foreground">{policy.uses} uses</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">Modified {policy.lastModified}</p>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+            <div className="flex justify-center pt-4">
+              <Button variant="outline" className="gap-2">
+                <Plus className="w-4 h-4" /> Create New Policy Template
+              </Button>
+            </div>
+          </motion.div>
+        )}
       </div>
     </DashboardLayout>
   );

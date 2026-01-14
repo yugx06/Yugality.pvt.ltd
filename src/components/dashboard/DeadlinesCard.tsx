@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { AlertCircle, Calendar } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const deadlines = [
   {
@@ -37,6 +38,7 @@ const deadlines = [
 ];
 
 export const DeadlinesCard = ({ emergencyMode }: { emergencyMode?: boolean }) => {
+  const { t } = useLanguage();
   const urgentDeadlines = deadlines.filter(d => d.urgent);
   const normalDeadlines = deadlines.filter(d => !d.urgent);
   
@@ -61,9 +63,9 @@ export const DeadlinesCard = ({ emergencyMode }: { emergencyMode?: boolean }) =>
           <AlertCircle className={`w-5 h-5 ${urgentDeadlines.length > 0 ? "text-destructive" : "text-tech"}`} />
         </motion.div>
         <div>
-          <h3 className="text-lg font-semibold text-foreground">Critical Deadlines</h3>
+          <h3 className="text-lg font-semibold text-foreground">{t("Critical Deadlines")}</h3>
           <p className="text-xs text-muted-foreground">
-            {urgentDeadlines.length} urgent, {normalDeadlines.length} upcoming
+            {urgentDeadlines.length} {t("urgent")}, {normalDeadlines.length} {t("upcoming")}
           </p>
         </div>
       </div>
@@ -106,7 +108,7 @@ export const DeadlinesCard = ({ emergencyMode }: { emergencyMode?: boolean }) =>
                 </div>
                 <p className={`text-xs font-medium mt-1
                   ${deadline.daysLeft <= 3 ? "text-destructive" : "text-muted-foreground"}`}>
-                  {deadline.daysLeft === 1 ? "Tomorrow" : `${deadline.daysLeft} days left`}
+                  {deadline.daysLeft === 1 ? t("Tomorrow") : `${deadline.daysLeft} ${t("days left")}`}
                 </p>
               </div>
             </div>

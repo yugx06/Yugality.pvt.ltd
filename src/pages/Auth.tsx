@@ -1,21 +1,21 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Crown, Scale, User, Shield, Eye, EyeOff, Sparkles, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Scale, User, Shield, Eye, EyeOff, Sparkles, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth, UserRole } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import logo from "@/assets/logo.jpeg";
+import logo from "@/assets/logo.png";
 
 const roleConfig = {
   lawyer: {
     title: "Advocate Portal",
     subtitle: "Access your legal practice dashboard",
     icon: Scale,
-    gradient: "from-amber-500 via-yellow-500 to-orange-500",
-    bgGradient: "from-amber-900/20 via-yellow-900/10 to-orange-900/20",
+    gradient: "from-slate-700 via-slate-800 to-slate-900",
+    bgGradient: "from-slate-900/20 via-slate-800/10 to-slate-700/20",
     demo: { email: "lawyer@demo.com", password: "lawyer123" },
     features: ["Case Management", "Client Portal", "Document Drafting", "Court Calendar"]
   },
@@ -23,8 +23,8 @@ const roleConfig = {
     title: "Client Portal",
     subtitle: "Track your legal matters",
     icon: User,
-    gradient: "from-emerald-500 via-teal-500 to-cyan-500",
-    bgGradient: "from-emerald-900/20 via-teal-900/10 to-cyan-900/20",
+    gradient: "from-slate-700 via-slate-800 to-slate-900",
+    bgGradient: "from-slate-900/20 via-slate-800/10 to-slate-700/20",
     demo: { email: "client@demo.com", password: "client123" },
     features: ["Case Status", "Document Access", "Billing History", "Secure Messaging"]
   },
@@ -32,8 +32,8 @@ const roleConfig = {
     title: "Admin Console",
     subtitle: "System administration & oversight",
     icon: Shield,
-    gradient: "from-purple-500 via-violet-500 to-indigo-500",
-    bgGradient: "from-purple-900/20 via-violet-900/10 to-indigo-900/20",
+    gradient: "from-slate-700 via-slate-800 to-slate-900",
+    bgGradient: "from-slate-900/20 via-slate-800/10 to-slate-700/20",
     demo: { email: "admin@demo.com", password: "admin123" },
     features: ["User Management", "System Settings", "Analytics", "Security Logs"]
   }
@@ -69,7 +69,7 @@ const Auth = () => {
         title: "Welcome back!",
         description: `Logged in as ${roleConfig[selectedRole].title}`,
       });
-      navigate("/");
+      navigate("/dashboard");
     } else {
       toast({
         title: "Login Failed",
@@ -88,8 +88,22 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* Video Background */}
+      <div className="absolute inset-0 z-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-30"
+        >
+          <source src="/bg.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/90" />
+      </div>
+
+      {/* Animated Background Overlay */}
+      <div className="absolute inset-0 overflow-hidden z-0">
         <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-primary/5 via-transparent to-transparent rotate-12 animate-pulse" />
         <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-primary/5 via-transparent to-transparent -rotate-12 animate-pulse" style={{ animationDelay: '1s' }} />
         
@@ -123,17 +137,17 @@ const Auth = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <div className="flex items-center justify-center gap-3 mb-4">
+          <div className="flex flex-col items-center justify-center gap-4 mb-4">
             <div className="relative">
-              <img src={logo} alt="LegalEase" className="w-16 h-16 rounded-xl shadow-lg" />
-              <Crown className="absolute -top-2 -right-2 w-5 h-5 text-yellow-500" />
+              <img src={logo} alt="Yugality" className="h-16 w-auto shadow-lg" />
             </div>
-            <div className="text-left">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                LegalEase Pro
+            <div className="text-center">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-2">
+                YUGALITY
               </h1>
-              <p className="text-muted-foreground text-sm flex items-center gap-1">
-                <Sparkles className="w-3 h-3" /> Premium Legal Practice Suite
+              <p className="text-muted-foreground text-sm flex items-center justify-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-primary" /> 
+                Empowering Legal Excellence with AI
               </p>
             </div>
           </div>

@@ -88,9 +88,10 @@ export const WhatsAppButton = () => {
       {/* Pulse Animation */}
       {!isOpen && (
         <motion.div
-          className="absolute inset-0 rounded-full bg-[#25D366]"
+          className="absolute inset-0 rounded-full bg-[#25D366] pointer-events-none"
           animate={{ scale: [1, 1.3, 1.3], opacity: [0.5, 0, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
+          style={{ transformOrigin: 'center' }}
         />
       )}
     </div>

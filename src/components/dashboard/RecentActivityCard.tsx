@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { FileText, Scale, Calendar, MessageSquare, CheckCircle, Clock, AlertCircle } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const activities = [
   {
@@ -50,6 +51,7 @@ const activities = [
 ];
 
 export const RecentActivityCard = () => {
+  const { t } = useLanguage();
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -65,13 +67,13 @@ export const RecentActivityCard = () => {
           >
             <Clock className="w-5 h-5 text-foreground" />
           </motion.div>
-          <h3 className="text-lg font-semibold text-foreground">Recent Activity</h3>
+          <h3 className="text-lg font-semibold text-foreground">{t("Recent Activity")}</h3>
         </div>
         <motion.button
           whileHover={{ x: 3 }}
           className="text-sm text-primary hover:text-primary/80 transition-colors"
         >
-          View all
+          {t("View all")}
         </motion.button>
       </div>
 

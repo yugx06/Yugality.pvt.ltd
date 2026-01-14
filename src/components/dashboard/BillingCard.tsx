@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { IndianRupee, TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const billingStats = {
   totalRevenue: "₹12,45,000",
@@ -15,6 +16,7 @@ const recentInvoices = [
 ];
 
 export const BillingCard = () => {
+  const { t } = useLanguage();
   return (
     <motion.div 
       className="yugality-card-interactive p-6"
@@ -30,8 +32,8 @@ export const BillingCard = () => {
           <IndianRupee className="w-5 h-5 text-primary" />
         </motion.div>
         <div>
-          <h3 className="text-lg font-semibold text-foreground">Billing Overview</h3>
-          <p className="text-xs text-muted-foreground">This month</p>
+          <h3 className="text-lg font-semibold text-foreground">{t("Billing Overview")}</h3>
+          <p className="text-xs text-muted-foreground">{t("This month")}</p>
         </div>
       </div>
 
@@ -41,7 +43,7 @@ export const BillingCard = () => {
           className="p-4 rounded-lg bg-primary/5 border border-primary/20"
           whileHover={{ scale: 1.02, borderColor: "hsl(var(--primary) / 0.4)" }}
         >
-          <p className="text-xs text-muted-foreground mb-1">Total Revenue</p>
+          <p className="text-xs text-muted-foreground mb-1">{t("Total Revenue")}</p>
           <motion.p 
             className="text-xl font-bold text-foreground"
             initial={{ opacity: 0, scale: 0.5 }}
@@ -65,14 +67,14 @@ export const BillingCard = () => {
             className="p-3 rounded-lg bg-muted/40 border border-border/50 hover:border-border transition-colors"
             whileHover={{ scale: 1.02 }}
           >
-            <p className="text-xs text-muted-foreground">Collected</p>
+            <p className="text-xs text-muted-foreground">{t("Collected")}</p>
             <p className="text-sm font-semibold text-foreground">{billingStats.collected}</p>
           </motion.div>
           <motion.div 
             className="p-3 rounded-lg bg-muted/40 border border-border/50 hover:border-border transition-colors"
             whileHover={{ scale: 1.02 }}
           >
-            <p className="text-xs text-muted-foreground">Pending</p>
+            <p className="text-xs text-muted-foreground">{t("Pending")}</p>
             <p className="text-sm font-semibold text-foreground">{billingStats.pending}</p>
           </motion.div>
         </div>
@@ -81,7 +83,7 @@ export const BillingCard = () => {
       {/* Recent Invoices */}
       <div>
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-3">
-          Recent Invoices
+          {t("Recent Invoices")}
         </p>
         <div className="space-y-2">
           {recentInvoices.map((invoice, index) => (

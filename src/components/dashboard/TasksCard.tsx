@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { CheckCircle, Circle, Clock, AlertCircle, Plus } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const initialTasks = [
   { id: 1, title: "Review Patel Industries affidavit", priority: "high", completed: false, dueTime: "Today, 2:00 PM" },
@@ -12,6 +13,7 @@ const initialTasks = [
 ];
 
 export const TasksCard = () => {
+  const { t } = useLanguage();
   const [tasks, setTasks] = useState(initialTasks);
 
   const toggleTask = (id: number) => {
@@ -46,12 +48,12 @@ export const TasksCard = () => {
             <CheckCircle className="w-5 h-5 text-foreground" />
           </motion.div>
           <div>
-            <h3 className="text-lg font-semibold text-foreground">Today's Tasks</h3>
-            <p className="text-xs text-muted-foreground">{completedCount}/{tasks.length} completed</p>
+            <h3 className="text-lg font-semibold text-foreground">{t("Today's Tasks")}</h3>
+            <p className="text-xs text-muted-foreground">{completedCount}/{tasks.length} {t("completed")}</p>
           </div>
         </div>
         <Button size="sm" variant="outline" className="gap-1 border-border/50 text-muted-foreground hover:text-foreground">
-          <Plus className="w-3.5 h-3.5" /> Add
+          <Plus className="w-3.5 h-3.5" /> {t("Add")}
         </Button>
       </div>
 

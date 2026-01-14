@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Briefcase, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const cases = [
   { status: "Active", count: 24, trend: "up", change: "+3" },
@@ -14,6 +15,7 @@ const recentCases = [
 ];
 
 export const CasesCard = () => {
+  const { t } = useLanguage();
   const getTrendIcon = (trend: string) => {
     switch (trend) {
       case "up": return <TrendingUp className="w-3 h-3 text-primary" />;
@@ -37,7 +39,7 @@ export const CasesCard = () => {
         >
           <Briefcase className="w-5 h-5 text-primary" />
         </motion.div>
-        <h3 className="text-lg font-semibold text-foreground">Active Cases</h3>
+        <h3 className="text-lg font-semibold text-foreground">{t("Active Cases")}</h3>
       </div>
 
       {/* Stats Grid */}
@@ -60,7 +62,7 @@ export const CasesCard = () => {
             >
               {item.count}
             </motion.p>
-            <p className="text-xs text-muted-foreground mb-1">{item.status}</p>
+            <p className="text-xs text-muted-foreground mb-1">{t(item.status)}</p>
             <div className="flex items-center justify-center gap-1 text-xs">
               {getTrendIcon(item.trend)}
               <span className={item.trend === "up" ? "text-primary" : "text-destructive"}>
@@ -73,7 +75,7 @@ export const CasesCard = () => {
 
       {/* Recent Cases */}
       <div className="space-y-3">
-        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Recent Activity</p>
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t("Recent Activity")}</p>
         {recentCases.map((caseItem, index) => (
           <motion.div
             key={caseItem.name}
@@ -91,7 +93,7 @@ export const CasesCard = () => {
             <div className="text-right">
               <span className={`text-xs px-2 py-0.5 rounded-full
                 ${caseItem.status === "Active" ? "status-filed" : "status-pending"}`}>
-                {caseItem.status}
+                {t(caseItem.status)}
               </span>
               <p className="text-xs text-muted-foreground mt-1">{caseItem.lastUpdate}</p>
             </div>

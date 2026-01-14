@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Bell, User, AlertTriangle, Bot, LogOut, Settings, Crown } from "lucide-react";
+import { Search, Bell, User, AlertTriangle, Bot, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,16 +15,18 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationsPanel } from "@/components/NotificationsPanel";
 import { AIAssistantDrawer } from "@/components/AIAssistantDrawer";
 import { useAuth } from "@/contexts/AuthContext";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface NavbarProps {
   sidebarWidth: number;
   emergencyMode: boolean;
   onEmergencyToggle: () => void;
+  onAIAssistantToggle?: (isOpen: boolean) => void;
 }
 
-export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle }: NavbarProps) => {
-  const [language, setLanguage] = useState<"EN" | "HI">("EN");
+export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle, onAIAssistantToggle }: NavbarProps) => {
+  const { language, setLanguage, t } = useLanguage();
   const [searchFocused, setSearchFocused] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showAIAssistant, setShowAIAssistant] = useState(false);
@@ -46,11 +48,20 @@ export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle }: Navba
     }
   };
 
+  const getRoleImage = (role?: string) => {
+    switch (role) {
+      case 'lawyer': return 'https://images.unsplash.com/photo-1556157382-97eda2d62296?w=200&h=200&fit=crop&crop=face';
+      case 'client': return 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face';
+      case 'admin': return 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face';
+      default: return 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face';
+    }
+  };
+
   const getRoleBadge = (role?: string) => {
     switch (role) {
-      case 'lawyer': return 'Advocate';
-      case 'client': return 'Client';
-      case 'admin': return 'Admin';
+      case 'lawyer': return t('Advocate');
+      case 'client': return t('Client');
+      case 'admin': return t('Admin');
       default: return 'User';
     }
   };
@@ -80,7 +91,7 @@ export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle }: Navba
             <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors duration-200 ${searchFocused ? 'text-primary' : 'text-muted-foreground'}`} />
             <Input
               type="text"
-              placeholder="Search documents, cases, clients..."
+              placeholder={t('Search documents, cases, clients...')}
               className="pl-10 bg-muted/50 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 focus:bg-card
                          h-10 text-sm placeholder:text-muted-foreground/60 transition-all duration-200"
               onFocus={() => setSearchFocused(true)}
@@ -96,11 +107,14 @@ export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle }: Navba
             <Button 
               variant="ghost" 
               size="sm" 
-              onClick={() => setShowAIAssistant(true)}
+              onClick={() => {
+                setShowAIAssistant(true);
+                onAIAssistantToggle?.(true);
+              }}
               className="gap-2 text-muted-foreground hover:text-tech hover:bg-tech/10"
             >
               <Bot className="w-4 h-4" />
-              <span className="hidden sm:inline text-xs font-medium">AI</span>
+              <span className="hidden sm:inline text-xs font-medium">{t('AI')}</span>
             </Button>
           </motion.div>
 
@@ -138,7 +152,7 @@ export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle }: Navba
                 <AlertTriangle className="w-4 h-4 relative z-10" />
               </motion.div>
               <span className="hidden sm:inline text-xs font-medium relative z-10">
-                {emergencyMode ? "EMERGENCY" : "Alert"}
+                {emergencyMode ? t('EMERGENCY') : t('Alert')}
               </span>
             </Button>
           </motion.div>
@@ -195,6 +209,7 @@ export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle }: Navba
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button variant="ghost" className="gap-2 px-2 text-muted-foreground hover:text-foreground hover:bg-muted">
                   <Avatar className="h-7 w-7">
+                    <AvatarImage src={getRoleImage(user?.role)} alt={user?.name} />
                     <AvatarFallback className={`bg-gradient-to-br ${getRoleColor(user?.role)} text-white text-xs font-bold`}>
                       {user?.name?.charAt(0) || 'U'}
                     </AvatarFallback>
@@ -213,7 +228,6 @@ export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle }: Navba
                 <p className="text-sm font-medium text-foreground">{user?.name}</p>
                 <p className="text-xs text-muted-foreground">{user?.email}</p>
                 <span className={`inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r ${getRoleColor(user?.role)} text-white`}>
-                  <Crown className="w-3 h-3" />
                   {getRoleBadge(user?.role)}
                 </span>
               </div>
@@ -244,7 +258,10 @@ export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle }: Navba
       {/* AI Assistant Drawer */}
       <AIAssistantDrawer 
         isOpen={showAIAssistant} 
-        onClose={() => setShowAIAssistant(false)} 
+        onClose={() => {
+          setShowAIAssistant(false);
+          onAIAssistantToggle?.(false);
+        }} 
       />
     </>
   );

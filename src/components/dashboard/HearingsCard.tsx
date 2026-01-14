@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Clock, MapPin, ChevronRight } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const hearings = [
   {
@@ -54,6 +55,7 @@ const itemVariants = {
 };
 
 export const HearingsCard = () => {
+  const { t } = useLanguage();
   return (
     <motion.div 
       className="yugality-card-interactive p-6"
@@ -62,13 +64,13 @@ export const HearingsCard = () => {
       transition={{ duration: 0.4 }}
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-foreground">Upcoming Hearings</h3>
+        <h3 className="text-lg font-semibold text-foreground">{t("Upcoming Hearings")}</h3>
         <motion.button 
           className="text-sm text-primary hover:text-primary/80 flex items-center gap-1 transition-colors"
           whileHover={{ x: 3 }}
           whileTap={{ scale: 0.97 }}
         >
-          View all <ChevronRight className="w-4 h-4" />
+          {t("View all")} <ChevronRight className="w-4 h-4" />
         </motion.button>
       </div>
 
@@ -96,9 +98,9 @@ export const HearingsCard = () => {
                 <div className="flex items-center gap-2 mb-1">
                   <span className={`text-xs font-medium px-2 py-0.5 rounded-full
                     ${hearing.urgent ? "status-urgent" : "status-filed"}`}>
-                    {hearing.type}
+                    {t(hearing.type)}
                   </span>
-                  <span className="text-xs text-muted-foreground">{hearing.date}</span>
+                  <span className="text-xs text-muted-foreground">{t(hearing.date)}</span>
                 </div>
                 <h4 className="text-sm font-medium text-foreground mb-1 group-hover:text-primary transition-colors">
                   {hearing.case}
