@@ -44,9 +44,11 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <div className={`min-h-screen bg-background relative ${emergencyMode ? "emergency-mode-active" : ""}`}>
         {/* Video Background */}
         <div className="fixed inset-0 z-0">
-          <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-10 dark:opacity-20">
-            <source src="/bg.mp4" type="video/mp4" />
-          </video>
+          <div className="absolute inset-0 bg-gradient-to-br from-background via-slate-950 to-background">
+            <div className="absolute inset-0 opacity-10" style={{
+              backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(200, 152, 56, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(200, 152, 56, 0.15) 0%, transparent 50%)'
+            }} />
+          </div>
           <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/90 to-background/95 dark:from-background/90 dark:via-background/85 dark:to-background/90" />
         </div>
 

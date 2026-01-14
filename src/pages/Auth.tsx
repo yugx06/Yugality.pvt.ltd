@@ -99,6 +99,11 @@ const Auth = () => {
         >
           <source src="/bg.mp4" type="video/mp4" />
         </video>
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-slate-900 to-black">
+          <div className="absolute inset-0 opacity-20" style={{
+            backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(200, 152, 56, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(200, 152, 56, 0.15) 0%, transparent 50%)'
+          }} />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/90" />
       </div>
 
