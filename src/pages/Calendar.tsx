@@ -312,7 +312,7 @@ const Calendar = () => {
             </div>
           </div>
           <div className="flex gap-2">
-            <div className="flex bg-card rounded-lg border border-border/50 p-1">
+            <div className="flex bg-card rounded-lg border border-gray-300 p-1">
               {["day", "week", "month", "3-month"].map((v) => (
                 <button
                   key={v}
@@ -346,9 +346,9 @@ const Calendar = () => {
                 const monthEvents = getMonthEvents(monthOffset);
                 
                 return (
-                  <div key={monthOffset} className="border border-border/50 rounded-lg overflow-hidden">
+                  <div key={monthOffset} className="border border-gray-300 rounded-lg overflow-hidden">
                     {/* Month Header */}
-                    <div className="bg-muted/30 p-3 border-b border-border/50">
+                    <div className="bg-muted/30 p-3 border-b border-gray-300">
                       <h3 className="text-lg font-semibold text-center text-foreground">
                         {monthNames[monthDate.getMonth()]} {monthDate.getFullYear()}
                       </h3>
@@ -360,7 +360,7 @@ const Calendar = () => {
                     {/* Days Header */}
                     <div className="grid grid-cols-7 bg-muted/20">
                       {weekDays.map((day) => (
-                        <div key={day} className="p-2 text-center text-xs font-medium text-muted-foreground border-r border-b border-border/30 last:border-r-0">
+                        <div key={day} className="p-2 text-center text-xs font-medium text-muted-foreground border-r border-b border-gray-300 last:border-r-0">
                           {day}
                         </div>
                       ))}
@@ -370,7 +370,7 @@ const Calendar = () => {
                     <div className="grid grid-cols-7">
                       {monthDays.map((day, index) => {
                         if (day === null) {
-                          return <div key={`empty-${index}`} className="aspect-square border-r border-b border-border/30 last:border-r-0" />;
+                          return <div key={`empty-${index}`} className="aspect-square border-r border-b border-gray-300 last:border-r-0" />;
                         }
                         
                         const dayDate = new Date(monthDate.getFullYear(), monthDate.getMonth(), day);
@@ -387,7 +387,7 @@ const Calendar = () => {
                         return (
                           <div
                             key={index}
-                            className="aspect-square border-r border-b border-border/30 last:border-r-0 p-1 hover:bg-muted/20 transition-colors cursor-pointer group relative"
+                            className="aspect-square border-r border-b border-gray-300 last:border-r-0 p-1 hover:bg-muted/20 transition-colors cursor-pointer group relative"
                             onClick={() => {
                               setCurrentDate(dayDate);
                               setShowAddDialog(true);
@@ -448,10 +448,10 @@ const Calendar = () => {
             /* Week View */
             <>
               {/* Week Header */}
-              <div className="grid grid-cols-8 border-b border-border/50">
-                <div className="p-4 border-r border-border/50" />
+              <div className="grid grid-cols-8 border-b border-gray-400">
+                <div className="p-4 border-r border-gray-400" />
                 {weekDates.map((date, i) => (
-                  <div key={i} className="p-4 text-center border-r border-border/50 last:border-0">
+                  <div key={i} className="p-4 text-center border-r border-gray-400 last:border-0">
                     <p className="text-xs text-muted-foreground uppercase">{weekDays[date.getDay()]}</p>
                     <p className={`text-lg font-semibold mt-1 ${
                       date.getDate() === new Date().getDate() && 
@@ -478,8 +478,8 @@ const Calendar = () => {
               {/* Time Grid */}
               <div className="max-h-[600px] overflow-y-auto scrollbar-dark">
                 {hours.map((hour) => (
-                  <div key={hour} className="grid grid-cols-8 border-b border-border/30">
-                    <div className="p-2 text-xs text-muted-foreground text-right pr-4 border-r border-border/50">
+                  <div key={hour} className="grid grid-cols-8 border-b border-gray-300">
+                    <div className="p-2 text-xs text-muted-foreground text-right pr-4 border-r border-gray-400">
                       {hour > 12 ? `${hour - 12} PM` : hour === 12 ? '12 PM' : `${hour} AM`}
                     </div>
                     {weekDates.map((date, dayIndex) => {
@@ -488,7 +488,7 @@ const Calendar = () => {
                         <div
                           key={dayIndex}
                           onClick={() => !event && setShowAddDialog(true)}
-                          className={`min-h-[60px] border-r border-border/30 last:border-0 hover:bg-muted/20 transition-colors relative ${
+                          className={`min-h-[60px] border-r border-gray-300 last:border-0 hover:bg-muted/20 transition-colors relative ${
                             !event ? 'cursor-pointer' : ''
                           }`}
                         >
@@ -500,7 +500,7 @@ const Calendar = () => {
                                 setSelectedEvent(event);
                                 setShowEditDialog(true);
                               }}
-                              className={`absolute inset-x-1 top-1 border rounded p-1.5 cursor-pointer hover:shadow-md transition-shadow ${
+                              className={`absolute inset-x-1 top-1 bottom-1 border rounded p-1.5 cursor-pointer hover:shadow-md transition-shadow z-10 ${
                                 getTypeColor(event.type)
                               }`}
                             >

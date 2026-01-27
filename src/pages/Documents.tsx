@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { 
   FileText, Upload, Search, Filter, Grid, List, FileCheck, FileClock, 
-  AlertCircle, Eye, Download, Trash2, X, File, Image, FileSpreadsheet, Plus, Edit, Copy 
+  AlertCircle, Eye, Download, Trash2, X, File, Image, FileSpreadsheet, Plus, Edit, Copy, ScanText 
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -148,11 +148,17 @@ const Documents = () => {
                "Manage and organize your legal documents"}
             </p>
           </div>
-          <Button className="yugality-button-gold gap-2">
-            <Upload className="w-4 h-4" /> 
-            {activeSection === "contracts" ? "New Contract" : 
-             activeSection === "policies" ? "New Policy" : "Upload Document"}
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" className="gap-2 border-primary/20 hover:bg-primary/5">
+              <ScanText className="w-4 h-4" /> 
+              OCR Scan
+            </Button>
+            <Button className="yugality-button-gold gap-2">
+              <Upload className="w-4 h-4" /> 
+              {activeSection === "contracts" ? "New Contract" : 
+               activeSection === "policies" ? "New Policy" : "Upload Document"}
+            </Button>
+          </div>
         </motion.div>
 
         {/* Section Tabs */}

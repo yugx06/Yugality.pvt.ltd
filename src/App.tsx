@@ -13,12 +13,10 @@ import Auth from "./pages/Auth";
 import Documents from "./pages/Documents";
 import Calendar from "./pages/Calendar";
 import AIAssistant from "./pages/AIAssistant";
-import Consultations from "./pages/Consultations";
 import Research from "./pages/Research";
-import CaseAnalysis from "./pages/CaseAnalysis";
 import Billing from "./pages/Billing";
-import Referrals from "./pages/Referrals";
 import Users from "./pages/Users";
+import Briefcase from "./pages/Briefcase";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,14 +33,12 @@ const App = () => (
               <Route path="/" element={<Landing />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+              <Route path="/briefcase" element={<ProtectedRoute><Briefcase /></ProtectedRoute>} />
               <Route path="/documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
               <Route path="/calendar" element={<ProtectedRoute><Calendar /></ProtectedRoute>} />
               <Route path="/ai-assistant" element={<ProtectedRoute><AIAssistant /></ProtectedRoute>} />
-              <Route path="/consultations" element={<ProtectedRoute><Consultations /></ProtectedRoute>} />
               <Route path="/research" element={<ProtectedRoute><Research /></ProtectedRoute>} />
-              <Route path="/case-analysis" element={<ProtectedRoute><CaseAnalysis /></ProtectedRoute>} />
               <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
-              <Route path="/referrals" element={<ProtectedRoute><Referrals /></ProtectedRoute>} />
               <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
               <Route path="/users/lawyers" element={<ProtectedRoute><Users /></ProtectedRoute>} />
               <Route path="/users/clients" element={<ProtectedRoute><Users /></ProtectedRoute>} />

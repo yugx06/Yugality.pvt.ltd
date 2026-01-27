@@ -6,53 +6,36 @@ import {
   FileText,
   Calendar,
   Bot,
-  Users,
   BookOpen,
-  Scale,
   Receipt,
-  UserPlus,
   ChevronLeft,
   ChevronRight,
   ChevronDown,
-  CreditCard,
   UserCircle,
   Shield,
+  Briefcase,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo.png";
 
 const menuItems = [
-  { icon: LayoutDashboard, labelKey: "Dashboard", path: "/dashboard", roles: ["lawyer", "client", "admin"] },
+  { icon: LayoutDashboard, labelKey: "Dashboard", path: "/dashboard", roles: ["lawyer"] },
+  { icon: Briefcase, labelKey: "Cases", path: "/briefcase", roles: ["lawyer"] },
   { 
     icon: FileText, 
     labelKey: "Documents", 
     path: "/documents", 
-    roles: ["lawyer", "client", "admin"],
+    roles: ["lawyer"],
     subItems: [
       { labelKey: "Contracts", path: "/documents#contracts" },
       { labelKey: "Policy Templates", path: "/documents#policies" }
     ]
   },
-  { icon: Calendar, labelKey: "Calendar", path: "/calendar", roles: ["lawyer", "client"] },
-  { icon: Bot, labelKey: "AI Assistant", path: "/ai-assistant", roles: ["lawyer", "client"] },
-  { icon: Users, labelKey: "Consultations", path: "/consultations", roles: ["lawyer", "client"] },
-  { icon: BookOpen, labelKey: "Research", path: "/research", roles: ["lawyer", "client"] },
-  { icon: Scale, labelKey: "Case Analysis", path: "/case-analysis", roles: ["lawyer"] },
-  { icon: Receipt, labelKey: "Billing", path: "/billing", roles: ["lawyer", "client", "admin"] },
-  { icon: UserPlus, labelKey: "Referrals", path: "/referrals", roles: ["lawyer"] },
-  { 
-    icon: Shield, 
-    labelKey: "User Management", 
-    path: "/users", 
-    roles: ["admin"],
-    subItems: [
-      { labelKey: "All Lawyers", path: "/users/lawyers" },
-      { labelKey: "All Clients", path: "/users/clients" },
-      { labelKey: "User Stats", path: "/users/stats" }
-    ]
-  },
-  { icon: UserCircle, labelKey: "Profile", path: "/profile", roles: ["lawyer", "client", "admin"] },
+  { icon: Calendar, labelKey: "Calendar", path: "/calendar", roles: ["lawyer"] },
+  { icon: Bot, labelKey: "AI Assistant", path: "/ai-assistant", roles: ["lawyer"] },
+  { icon: BookOpen, labelKey: "Research", path: "/research", roles: ["lawyer"] },
+  { icon: Receipt, labelKey: "Billing", path: "/billing", roles: ["lawyer"] },
+  { icon: UserCircle, labelKey: "Profile", path: "/profile", roles: ["lawyer"] },
 ];
 
 interface SidebarProps {
@@ -63,12 +46,7 @@ interface SidebarProps {
 export const Sidebar = ({ isCollapsed, onToggle }: SidebarProps) => {
   const location = useLocation();
   const { t } = useLanguage();
-  const { user } = useAuth();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
-  
-  const filteredMenuItems = menuItems.filter(item => 
-    !item.roles || item.roles.includes(user?.role || "client")
-  );
 
   const toggleExpanded = (path: string) => {
     setExpandedItems(prev => 
@@ -131,7 +109,7 @@ const itemVariants = {
       {/* Navigation */}
       <nav className="flex-1 py-6 px-3 overflow-y-auto scrollbar-thin">
         <ul className="space-y-1">
-          {filteredMenuItems.map((item, index) => {
+          {menuItems.map((item, index) => {
             const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '#');
             const isExpanded = expandedItems.includes(item.path);
             const Icon = item.icon;

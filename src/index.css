@@ -1,140 +1,122 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* SF Pro Display - Apple's font */
+@font-face {
+  font-family: 'SF Pro Display';
+  src: local('SF Pro Display'), local('SFProDisplay-Regular'),
+       url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-regular-webfont.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: local('SF Pro Display Medium'), local('SFProDisplay-Medium'),
+       url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-medium-webfont.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: local('SF Pro Display Semibold'), local('SFProDisplay-Semibold'),
+       url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-semibold-webfont.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: local('SF Pro Display Bold'), local('SFProDisplay-Bold'),
+       url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-bold-webfont.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+/* Custom smooth scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
 @layer base {
   :root {
-    /* Yugality Light Theme - Professional Legal */
-    --background: 220 20% 97%; /* Soft off-white */
-    --foreground: 220 25% 20%; /* Charcoal text */
+    /* Clean Apple-inspired Light Theme - White & Black */
+    --background: 0 0% 100%; /* Pure white */
+    --foreground: 0 0% 9%; /* Nearly black */
 
     --card: 0 0% 100%; /* Pure white cards */
-    --card-foreground: 220 25% 20%;
+    --card-foreground: 0 0% 9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 20%;
+    --popover-foreground: 0 0% 9%;
 
-    --primary: 43 55% 48%; /* Gold justice - slightly deeper */
+    --primary: 0 0% 9%; /* Black primary */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14% 92%; /* Light gray surface */
-    --secondary-foreground: 220 25% 30%;
+    --secondary: 0 0% 96%; /* Light gray surface */
+    --secondary-foreground: 0 0% 9%;
 
-    --muted: 220 14% 94%; /* Very light gray */
-    --muted-foreground: 220 15% 50%; /* Medium gray text */
+    --muted: 0 0% 96%; /* Very light gray */
+    --muted-foreground: 0 0% 45%; /* Medium gray text */
 
-    --accent: 43 55% 48%;
+    --accent: 0 0% 9%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 4 74% 52%; /* Emergency red */
+    --destructive: 0 84% 60%; /* Red */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 88%; /* Subtle border */
-    --input: 220 14% 94%;
-    --ring: 43 55% 48%;
+    --border: 0 0% 90%; /* Subtle border */
+    --input: 0 0% 96%;
+    --ring: 0 0% 9%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
-    /* Custom Yugality tokens */
-    --gold: 43 55% 48%;
-    --gold-light: 43 60% 75%;
-    --gold-glow: 43 70% 58%;
-    --tech-blue: 215 25% 55%;
-    --tech-blue-light: 215 30% 75%;
-    --emergency: 4 74% 52%;
-    --emergency-light: 4 80% 95%;
-    --emergency-glow: 4 80% 60%;
-    --surface-elevated: 0 0% 100%;
-    --surface-overlay: 220 20% 98%;
-
-    /* Gradients */
-    --gradient-gold: linear-gradient(135deg, hsl(43 55% 48%), hsl(43 45% 42%));
-    --gradient-tech: linear-gradient(135deg, hsl(215 25% 55%), hsl(215 30% 45%));
-    --gradient-surface: linear-gradient(180deg, hsl(0 0% 100%), hsl(220 14% 97%));
-    --gradient-emergency: linear-gradient(135deg, hsl(4 74% 52%), hsl(4 80% 45%));
-
-    /* Shadows - softer, more diffuse */
-    --shadow-sm: 0 1px 2px hsl(220 25% 20% / 0.04);
-    --shadow-card: 0 4px 16px -2px hsl(220 25% 20% / 0.06), 0 2px 4px -1px hsl(220 25% 20% / 0.04);
-    --shadow-elevated: 0 12px 40px -8px hsl(220 25% 20% / 0.12), 0 4px 12px -2px hsl(220 25% 20% / 0.08);
-    --shadow-gold-glow: 0 8px 30px hsl(43 55% 48% / 0.15);
-    --shadow-emergency-glow: 0 0 40px hsl(4 74% 52% / 0.2);
+    /* Custom tokens */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 220 25% 20%;
-    --sidebar-primary: 43 55% 48%;
+    --sidebar-foreground: 0 0% 9%;
+    --sidebar-primary: 0 0% 9%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 96%;
-    --sidebar-accent-foreground: 220 25% 20%;
-    --sidebar-border: 220 15% 92%;
-    --sidebar-ring: 43 55% 48%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 9%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 0 0% 9%;
   }
-
-  .dark {
-    /* Yugality Dark Theme */
-    --background: 220 20% 8%;
-    --foreground: 220 10% 92%;
-
-    --card: 220 18% 12%;
-    --card-foreground: 220 10% 92%;
-
-    --popover: 220 18% 12%;
-    --popover-foreground: 220 10% 92%;
-
-    --primary: 43 55% 52%;
-    --primary-foreground: 220 20% 10%;
-
-    --secondary: 220 14% 18%;
-    --secondary-foreground: 220 10% 80%;
-
-    --muted: 220 14% 16%;
-    --muted-foreground: 220 10% 55%;
-
-    --accent: 43 55% 52%;
-    --accent-foreground: 220 20% 10%;
-
-    --destructive: 4 74% 55%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 220 15% 22%;
-    --input: 220 14% 18%;
-    --ring: 43 55% 52%;
-
-    /* Dark theme custom tokens */
-    --gold: 43 55% 52%;
-    --gold-light: 43 60% 65%;
-    --gold-glow: 43 70% 55%;
-    --tech-blue: 215 35% 60%;
-    --tech-blue-light: 215 40% 70%;
-    --emergency: 4 74% 55%;
-    --emergency-light: 4 60% 20%;
-    --emergency-glow: 4 80% 60%;
-    --surface-elevated: 220 18% 14%;
-    --surface-overlay: 220 18% 10%;
-
-    /* Dark gradients */
-    --gradient-gold: linear-gradient(135deg, hsl(43 55% 52%), hsl(43 50% 42%));
-    --gradient-tech: linear-gradient(135deg, hsl(215 35% 60%), hsl(215 40% 50%));
-    --gradient-surface: linear-gradient(180deg, hsl(220 18% 14%), hsl(220 18% 10%));
-    --gradient-emergency: linear-gradient(135deg, hsl(4 74% 55%), hsl(4 80% 45%));
-
-    /* Dark shadows */
-    --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.2);
-    --shadow-card: 0 4px 16px -2px hsl(0 0% 0% / 0.3), 0 2px 4px -1px hsl(0 0% 0% / 0.2);
-    --shadow-elevated: 0 12px 40px -8px hsl(0 0% 0% / 0.4), 0 4px 12px -2px hsl(0 0% 0% / 0.3);
-    --shadow-gold-glow: 0 8px 30px hsl(43 55% 52% / 0.2);
-    --shadow-emergency-glow: 0 0 40px hsl(4 74% 55% / 0.3);
-
-    --sidebar-background: 220 18% 10%;
-    --sidebar-foreground: 220 10% 92%;
-    --sidebar-primary: 43 55% 52%;
-    --sidebar-primary-foreground: 220 20% 10%;
-    --sidebar-accent: 220 14% 16%;
-    --sidebar-accent-foreground: 220 10% 92%;
-    --sidebar-border: 220 15% 18%;
-    --sidebar-ring: 43 55% 52%;
+  
+  * {
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
   }
 }
 
@@ -145,101 +127,59 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'IBM Plex Sans', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-semibold tracking-tight;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    @apply text-5xl font-semibold;
+    letter-spacing: -0.03em;
+  }
+
+  h2 {
+    @apply text-4xl font-semibold;
+  }
+
+  h3 {
+    @apply text-3xl font-semibold;
   }
 }
 
 @layer components {
-  .yugality-card {
-    @apply bg-card rounded-xl border border-border shadow-[var(--shadow-card)] 
+  .apple-card {
+    @apply bg-white rounded-2xl border border-gray-200 shadow-sm 
            transition-all duration-300 ease-out;
   }
 
-  .yugality-card-interactive {
-    @apply yugality-card hover:shadow-[var(--shadow-elevated)] 
-           hover:border-border hover:-translate-y-1 hover:scale-[1.01]
-           active:scale-[0.99] active:shadow-[var(--shadow-card)];
+  .apple-card-interactive {
+    @apply apple-card hover:shadow-md hover:-translate-y-0.5 
+           active:scale-[0.99];
   }
 
-  .yugality-card-gold {
-    @apply yugality-card-interactive hover:border-primary/40 hover:shadow-[var(--shadow-gold-glow)];
+  .apple-button-primary {
+    @apply bg-black text-white font-medium px-6 py-3 rounded-xl
+           transition-all duration-200 ease-out hover:bg-gray-800
+           active:scale-[0.98];
   }
 
-  .yugality-card-emergency {
-    @apply yugality-card border-destructive/40 bg-[hsl(var(--emergency-light))] animate-pulse-subtle;
-  }
-
-  .yugality-button-gold {
-    @apply bg-primary text-primary-foreground font-medium px-4 py-2 rounded-lg
-           transition-all duration-200 ease-out hover:brightness-105 hover:shadow-[var(--shadow-gold-glow)]
-           hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0;
-  }
-
-  .yugality-button-ghost {
-    @apply text-muted-foreground hover:text-foreground hover:bg-muted
-           px-3 py-2 rounded-lg transition-all duration-200;
-  }
-
-  .yugality-nav-item {
-    @apply flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground
-           transition-all duration-200 ease-out hover:text-foreground hover:bg-muted
-           hover:translate-x-1 cursor-pointer;
-  }
-
-  .yugality-nav-item-active {
-    @apply yugality-nav-item text-primary bg-primary/8 border-l-3 border-primary
-           hover:bg-primary/12 hover:text-primary translate-x-0;
-  }
-
-  .status-urgent {
-    @apply bg-destructive/10 text-destructive border border-destructive/20 
-           px-2.5 py-0.5 rounded-full text-xs font-medium animate-pulse-subtle;
-  }
-
-  .status-pending {
-    @apply bg-tech/10 text-tech border border-tech/20 
-           px-2.5 py-0.5 rounded-full text-xs font-medium;
-  }
-
-  .status-filed {
-    @apply bg-primary/10 text-primary border border-primary/20 
-           px-2.5 py-0.5 rounded-full text-xs font-medium;
-  }
-
-  .emergency-mode-active {
-    @apply relative;
-  }
-
-  .emergency-mode-active::before {
-    content: '';
-    @apply absolute inset-0 rounded-xl pointer-events-none;
-    box-shadow: inset 0 0 80px hsl(4 74% 52% / 0.08);
-  }
-
-  /* Interactive hover lift effect */
-  .hover-lift {
-    @apply transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-elevated)];
-  }
-
-  /* Slide-in animation helper */
-  .slide-in-panel {
-    @apply animate-slide-in-right;
-  }
-
-  /* Fade scale entrance */
-  .fade-scale-in {
-    @apply animate-fade-scale-in;
+  .apple-button-secondary {
+    @apply bg-white text-black border border-gray-300 font-medium px-6 py-3 rounded-xl
+           transition-all duration-200 ease-out hover:bg-gray-50
+           active:scale-[0.98];
   }
 }
 
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--border)) transparent;
+    scrollbar-color: rgb(229, 229, 229) transparent;
   }
 
   .scrollbar-thin::-webkit-scrollbar {
@@ -251,57 +191,11 @@
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: hsl(var(--border));
+    background: rgb(229, 229, 229);
     border-radius: 3px;
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground));
-  }
-
-  .text-gradient-gold {
-    @apply bg-clip-text text-transparent;
-    background-image: var(--gradient-gold);
-  }
-
-  /* Glass morphism */
-  .glass {
-    @apply bg-card/80 backdrop-blur-xl border-border/50;
-  }
-
-  /* Subtle border on hover */
-  .border-hover {
-    @apply border border-transparent hover:border-border transition-colors duration-200;
-  }
-
-  /* Leaflet map customization */
-  .leaflet-container {
-    @apply rounded-lg;
-  }
-
-  .leaflet-popup-content-wrapper {
-    @apply bg-card border border-border rounded-lg shadow-lg;
-  }
-
-  .leaflet-popup-content {
-    @apply text-foreground;
-  }
-
-  .leaflet-popup-tip {
-    @apply bg-card;
-  }
-
-  /* Custom urgent marker animation */
-  .custom-urgent-marker {
-    animation: urgent-bounce 1s ease-in-out infinite;
-  }
-
-  @keyframes urgent-bounce {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
+    background: rgb(212, 212, 212);
   }
 }

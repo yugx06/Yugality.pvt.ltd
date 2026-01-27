@@ -133,6 +133,8 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [showPromptLibrary, setShowPromptLibrary] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recognition, setRecognition] = useState<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -142,6 +144,31 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    // Initialize speech recognition
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+      const recognitionInstance = new SpeechRecognition();
+      recognitionInstance.continuous = false;
+      recognitionInstance.interimResults = true;
+      recognitionInstance.lang = 'en-US';
+      
+      recognitionInstance.onresult = (event: any) => {
+        const transcript = Array.from(event.results)
+          .map((result: any) => result[0])
+          .map((result: any) => result.transcript)
+          .join('');
+        setInput(transcript);
+      };
+      
+      recognitionInstance.onend = () => {
+        setIsRecording(false);
+      };
+      
+      setRecognition(recognitionInstance);
+    }
+  }, []);
 
   const handleEnhancePrompt = () => {
     if (!input.trim()) return;
@@ -181,6 +208,21 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
   const handlePromptSelect = (prompt: string) => {
     setInput(prompt);
     setShowPromptLibrary(false);
+  };
+
+  const handleVoiceRecord = () => {
+    if (!recognition) {
+      alert('Speech recognition is not supported in your browser. Please use Chrome, Edge, or Safari.');
+      return;
+    }
+    
+    if (isRecording) {
+      recognition.stop();
+      setIsRecording(false);
+    } else {
+      recognition.start();
+      setIsRecording(true);
+    }
   };
 
   return (
@@ -409,8 +451,14 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
                 {/* Mic Button */}
                 <Button 
                   size="icon" 
-                  variant="ghost" 
-                  className="h-9 w-9 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-xl shrink-0"
+                  variant="ghost"
+                  onClick={handleVoiceRecord}
+                  className={`h-9 w-9 rounded-xl shrink-0 transition-all ${
+                    isRecording 
+                      ? 'text-red-500 bg-red-500/20 hover:bg-red-500/30 animate-pulse' 
+                      : 'text-muted-foreground hover:text-primary hover:bg-primary/10'
+                  }`}
+                  title={isRecording ? 'Stop recording' : 'Start voice input'}
                 >
                   <Mic className="w-4 h-4" />
                 </Button>

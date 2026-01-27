@@ -350,7 +350,7 @@ const Research = () => {
                     <SelectItem value="regulations">Regulations</SelectItem>
                   </SelectContent>
                 </Select>
-                <Button className="bg-blue-600 hover:bg-blue-700 h-10">
+                <Button className="bg-black hover:bg-gray-900 h-10">
                   <Search className="w-4 h-4 mr-2" />
                   Search
                 </Button>
@@ -440,7 +440,7 @@ const Research = () => {
                   <Card key={result.id} className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-blue-600 hover:underline mb-2">
+                        <h3 className="text-lg font-semibold text-black hover:underline mb-2">
                           {result.title}
                         </h3>
                         <div className="flex items-center gap-3 text-sm text-muted-foreground mb-2">
@@ -452,7 +452,7 @@ const Research = () => {
                         </div>
                       </div>
                       <div className="flex gap-2">
-                        <Badge className={result.relevance === "High" ? "bg-blue-600" : "bg-gray-600"}>
+                        <Badge className={result.relevance === "High" ? "bg-black" : "bg-gray-600"}>
                           {result.relevance} Relevance
                         </Badge>
                         <Badge variant="outline">{result.category}</Badge>
@@ -466,31 +466,31 @@ const Research = () => {
 
             <TabsContent value="databases">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <Button className="h-24 text-white text-base font-medium bg-blue-900 hover:bg-blue-950">
+                <Button className="h-24 text-white text-base font-medium bg-black hover:bg-gray-900">
                   Browse Curated Topics
                 </Button>
-                <Button className="h-24 text-white text-base font-medium bg-blue-900 hover:bg-blue-950">
+                <Button className="h-24 text-white text-base font-medium bg-black hover:bg-gray-900">
                   Browse Law Reports
                 </Button>
-                <Button className="h-24 text-white text-base font-medium bg-blue-900 hover:bg-blue-950">
+                <Button className="h-24 text-white text-base font-medium bg-black hover:bg-gray-900">
                   Browse Judgments by Court / Tribunals
                 </Button>
-                <Button className="h-24 text-white text-base font-medium bg-blue-900 hover:bg-blue-950">
+                <Button className="h-24 text-white text-base font-medium bg-black hover:bg-gray-900">
                   Browse Legislation
                 </Button>
-                <Button className="h-24 text-white text-base font-medium bg-blue-900 hover:bg-blue-950">
+                <Button className="h-24 text-white text-base font-medium bg-black hover:bg-gray-900">
                   Browse Articles & Short Pieces
                 </Button>
-                <Button className="h-24 text-white text-base font-medium bg-blue-900 hover:bg-blue-950">
+                <Button className="h-24 text-white text-base font-medium bg-black hover:bg-gray-900">
                   Browse Secondary Material
                 </Button>
-                <Button className="h-24 text-white text-base font-medium bg-blue-900 hover:bg-blue-950">
+                <Button className="h-24 text-white text-base font-medium bg-black hover:bg-gray-900">
                   Browse Treaties, Conventions, and Instruments
                 </Button>
-                <Button className="h-24 text-white text-base font-medium bg-blue-900 hover:bg-blue-950">
+                <Button className="h-24 text-white text-base font-medium bg-black hover:bg-gray-900">
                   Browse Legal / Business News
                 </Button>
-                <Button className="h-24 text-white text-base font-medium bg-blue-900 hover:bg-blue-950">
+                <Button className="h-24 text-white text-base font-medium bg-black hover:bg-gray-900">
                   Moot Court Resources
                 </Button>
               </div>

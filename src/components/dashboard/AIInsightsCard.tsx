@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Bot, Lightbulb, ArrowRight, Sparkles } from "lucide-react";
+import { Bot, Lightbulb, ArrowRight, Sparkles, Search, Clock } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const insights = [
@@ -24,6 +24,13 @@ const insights = [
     description: "Consider filing early for Kumar case - court backlog expected.",
     action: "Learn More",
   },
+];
+
+const recentSearches = [
+  { id: 1, query: "Property dispute precedents", time: "2 hours ago" },
+  { id: 2, query: "Section 138 NI Act case laws", time: "5 hours ago" },
+  { id: 3, query: "Divorce settlement guidelines", time: "1 day ago" },
+  { id: 4, query: "Corporate insolvency procedure", time: "2 days ago" },
 ];
 
 export const AIInsightsCard = () => {
@@ -96,6 +103,33 @@ export const AIInsightsCard = () => {
               </div>
             </motion.div>
           ))}
+        </div>
+
+        {/* Previous Search Section */}
+        <div className="mt-6 pt-6 border-t border-border/50">
+          <div className="flex items-center gap-2 mb-4">
+            <Search className="w-4 h-4 text-tech" />
+            <h4 className="text-sm font-semibold text-foreground">{t("Previous Search")}</h4>
+          </div>
+          <div className="space-y-2">
+            {recentSearches.map((search) => (
+              <motion.div
+                key={search.id}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                whileHover={{ x: 4, backgroundColor: "rgba(0, 0, 0, 0.02)" }}
+                className="p-3 rounded-lg cursor-pointer transition-all duration-200 flex items-center justify-between group"
+              >
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <Clock className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                  <span className="text-xs text-foreground truncate group-hover:text-tech transition-colors">
+                    {search.query}
+                  </span>
+                </div>
+                <span className="text-xs text-muted-foreground flex-shrink-0">{search.time}</span>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
         <motion.button 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Bell, User, AlertTriangle, Bot, LogOut, Settings } from "lucide-react";
+import { Search, Bell, User, AlertTriangle, LogOut, Settings, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationsPanel } from "@/components/NotificationsPanel";
 import { AIAssistantDrawer } from "@/components/AIAssistantDrawer";
 import { useAuth } from "@/contexts/AuthContext";
@@ -36,34 +35,19 @@ export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle, onAIAss
 
   const handleLogout = () => {
     logout();
-    navigate("/auth");
+    navigate("/");
   };
 
-  const getRoleColor = (role?: string) => {
-    switch (role) {
-      case 'lawyer': return 'from-amber-500 to-orange-500';
-      case 'client': return 'from-emerald-500 to-teal-500';
-      case 'admin': return 'from-purple-500 to-indigo-500';
-      default: return 'from-primary to-primary/80';
-    }
+  const getRoleColor = () => {
+    return 'from-black to-gray-900';
   };
 
-  const getRoleImage = (role?: string) => {
-    switch (role) {
-      case 'lawyer': return 'https://images.unsplash.com/photo-1556157382-97eda2d62296?w=200&h=200&fit=crop&crop=face';
-      case 'client': return 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face';
-      case 'admin': return 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face';
-      default: return 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face';
-    }
+  const getRoleImage = () => {
+    return 'https://images.unsplash.com/photo-1556157382-97eda2d62296?w=200&h=200&fit=crop&crop=face';
   };
 
-  const getRoleBadge = (role?: string) => {
-    switch (role) {
-      case 'lawyer': return t('Advocate');
-      case 'client': return t('Client');
-      case 'admin': return t('Admin');
-      default: return 'User';
-    }
+  const getRoleBadge = () => {
+    return t('Advocate');
   };
 
   return (
@@ -157,9 +141,6 @@ export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle, onAIAss
             </Button>
           </motion.div>
 
-          {/* Theme Toggle */}
-          <ThemeToggle />
-
           {/* Language Toggle */}
           <div className="hidden md:flex items-center bg-muted/50 rounded-lg border border-border/50 p-1">
             {["EN", "HI"].map((lang) => (
@@ -209,15 +190,15 @@ export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle, onAIAss
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button variant="ghost" className="gap-2 px-2 text-muted-foreground hover:text-foreground hover:bg-muted">
                   <Avatar className="h-7 w-7">
-                    <AvatarImage src={getRoleImage(user?.role)} alt={user?.name} />
-                    <AvatarFallback className={`bg-gradient-to-br ${getRoleColor(user?.role)} text-white text-xs font-bold`}>
+                    <AvatarImage src={getRoleImage()} alt={user?.name} />
+                    <AvatarFallback className="bg-black text-white text-xs font-bold">
                       {user?.name?.charAt(0) || 'U'}
                     </AvatarFallback>
                   </Avatar>
                   <div className="hidden md:flex flex-col items-start">
                     <span className="text-xs font-medium text-foreground">{user?.name?.split(' ')[0]}</span>
-                    <span className={`text-[10px] bg-gradient-to-r ${getRoleColor(user?.role)} bg-clip-text text-transparent font-semibold`}>
-                      {getRoleBadge(user?.role)}
+                    <span className="text-[10px] text-black font-semibold">
+                      {getRoleBadge()}
                     </span>
                   </div>
                 </Button>
@@ -227,8 +208,8 @@ export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle, onAIAss
               <div className="px-3 py-2 border-b border-border">
                 <p className="text-sm font-medium text-foreground">{user?.name}</p>
                 <p className="text-xs text-muted-foreground">{user?.email}</p>
-                <span className={`inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r ${getRoleColor(user?.role)} text-white`}>
-                  {getRoleBadge(user?.role)}
+                <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-black text-white">
+                  {getRoleBadge()}
                 </span>
               </div>
               <DropdownMenuItem className="cursor-pointer hover:bg-muted focus:bg-muted gap-2">
