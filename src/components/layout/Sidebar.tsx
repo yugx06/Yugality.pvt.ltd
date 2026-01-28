@@ -16,7 +16,6 @@ import {
   Briefcase,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import logo from "@/assets/logo.png";
 
 const menuItems = [
   { icon: LayoutDashboard, labelKey: "Dashboard", path: "/dashboard", roles: ["lawyer"] },
@@ -84,9 +83,9 @@ const itemVariants = {
       <div className="h-16 flex items-center justify-between px-4 border-b border-sidebar-border">
         <Link to="/dashboard" className="flex items-center gap-3 overflow-hidden group">
           <motion.img 
-            src={logo} 
+            src="/logo.jpeg" 
             alt="Yugality" 
-            className="w-10 h-10 object-cover shadow-sm"
+            className="w-10 h-10 object-cover shadow-sm rounded-lg"
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
           />
