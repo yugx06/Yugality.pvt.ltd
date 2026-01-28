@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import logo from "@/assets/logo.png";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -70,7 +69,7 @@ const Auth = () => {
           className="text-center mb-12"
         >
           <div className="flex flex-col items-center gap-4 mb-8">
-            <img src={logo} alt="Yugality" className="h-16 w-auto" />
+            <img src="/logo.jpeg" alt="Yugality" className="h-16 w-auto" />
             <div className="text-center">
               <h1 className="text-4xl font-semibold text-black tracking-tight mb-2">
                 Yugality

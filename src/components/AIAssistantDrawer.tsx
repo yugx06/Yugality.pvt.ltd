@@ -187,20 +187,37 @@ export const AIAssistantDrawer = ({ isOpen, onClose }: AIAssistantDrawerProps) =
 
   const handleSend = () => {
     if (!input.trim()) return;
-    setMessages([...messages, { role: "user", content: input }]);
+    const userMessage = input;
+    setMessages([...messages, { role: "user", content: userMessage }]);
     setInput("");
     setIsTyping(true);
     
     setTimeout(() => {
       setIsTyping(false);
-      const responses = [
-        "Based on your query, I've analyzed the relevant legal provisions. The key points to consider are the applicable statutes, recent amendments, and their interpretations in similar cases. Would you like me to elaborate on any specific aspect?",
-        "I've reviewed this matter carefully. Here's a comprehensive analysis with relevant case law references, statutory provisions, and practical recommendations for proceeding with your case.",
-        "After analyzing your request, I can provide detailed guidance. This involves multiple legal considerations including procedural requirements, substantive law provisions, and strategic approaches. Let me break this down for you."
-      ];
+      
+      // Generate contextual responses based on the user's query
+      let response = "";
+      const lowerQuery = userMessage.toLowerCase();
+      
+      if (lowerQuery.includes("draft") || lowerQuery.includes("notice") || lowerQuery.includes("document")) {
+        response = "I can help you draft that document. To provide the most accurate draft, I'll need a few details:\n\n1. Parties involved (names and addresses)\n2. Nature of the matter\n3. Key facts and circumstances\n4. Desired outcome\n\nPlease share these details, and I'll prepare a comprehensive draft with relevant legal provisions and precedents.";
+      } else if (lowerQuery.includes("case law") || lowerQuery.includes("precedent") || lowerQuery.includes("judgment")) {
+        response = "I'll help you find relevant case law. Based on your query, here are the key areas to research:\n\n• Applicable statutory provisions\n• Landmark Supreme Court judgments\n• Recent High Court decisions\n• Legal principles and ratio decidendi\n\nCould you specify:\n1. The jurisdiction (Supreme Court/High Court)\n2. Time period preference\n3. Specific legal issue or section\n\nThis will help me provide more targeted case citations.";
+      } else if (lowerQuery.includes("strategy") || lowerQuery.includes("advice") || lowerQuery.includes("approach")) {
+        response = "Let me help you develop an effective legal strategy. For the best approach, consider:\n\n1. **Strengths of your case**: Key evidence, favorable precedents, statutory support\n2. **Potential challenges**: Weak points, opposing arguments, procedural hurdles\n3. **Alternative remedies**: Settlement options, mediation, arbitration\n4. **Timeline considerations**: Limitation periods, hearing schedules\n\nPlease share more details about your specific case, and I'll provide tailored strategic recommendations with supporting case law.";
+      } else if (lowerQuery.includes("contract") || lowerQuery.includes("agreement") || lowerQuery.includes("review")) {
+        response = "I'll analyze this contract thoroughly. For a comprehensive review, I'll examine:\n\n• **Validity**: Essential elements, consideration, capacity\n• **Risk factors**: Unfavorable clauses, hidden liabilities, ambiguous terms\n• **Compliance**: Regulatory requirements, stamp duty, registration\n• **Enforcement**: Dispute resolution clauses, jurisdiction, remedies\n\nPlease share the contract or specific clauses you'd like me to review, and I'll provide detailed analysis with suggestions for modifications.";
+      } else if (lowerQuery.includes("section") || lowerQuery.includes("act") || lowerQuery.includes("law")) {
+        response = "I can explain the legal provisions in detail. To give you the most relevant information:\n\n• **Statutory interpretation**: Plain meaning and judicial interpretation\n• **Scope and applicability**: When and how it applies\n• **Key amendments**: Recent changes and their impact\n• **Related provisions**: Connecting sections and rules\n• **Case law**: How courts have applied this provision\n\nPlease specify the exact Act and Section number, and I'll provide a comprehensive explanation with relevant case citations.";
+      } else if (lowerQuery.includes("filing") || lowerQuery.includes("procedure") || lowerQuery.includes("process")) {
+        response = "I'll guide you through the procedural requirements step by step:\n\n1. **Documentation**: Required documents, affidavits, annexures\n2. **Format requirements**: Court fees, vakalatnama, formatting\n3. **Timeline**: Limitation periods, filing deadlines\n4. **Next steps**: After filing - service, listing, hearing\n5. **Common pitfalls**: What to avoid for smooth processing\n\nCould you specify which type of proceeding (civil suit, writ petition, criminal complaint, appeal, etc.) so I can provide precise procedural guidance?";
+      } else {
+        response = "Thank you for your query. I'm here to assist you with:\n\n• **Legal Research**: Case law, statutes, precedents\n• **Document Drafting**: Notices, contracts, pleadings, applications\n• **Case Analysis**: Strengths, weaknesses, strategy development\n• **Procedural Guidance**: Filing requirements, timelines, formats\n• **Legal Opinions**: Interpretation of laws and rights\n\nCould you provide more specific details about your legal matter? The more information you share, the more accurate and helpful my response will be. You can also use the Quick Actions or Prompt Library for common queries.";
+      }
+      
       setMessages(prev => [...prev, {
         role: "assistant",
-        content: responses[Math.floor(Math.random() * responses.length)]
+        content: response
       }]);
     }, 2000);
   };
