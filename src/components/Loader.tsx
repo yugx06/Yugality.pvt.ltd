@@ -61,9 +61,9 @@ export const Loader = ({ onLoadComplete }: LoaderProps) => {
               duration: 1.5,
               repeat: Infinity,
             }}
-            className="w-32 h-32 rounded-3xl overflow-hidden shadow-2xl"
+            className="w-32 h-32 overflow-hidden shadow-2xl bg-white p-2"
           >
-            <img src="/logo.jpeg" alt="Yugality" className="w-full h-full object-cover" />
+            <img src="/logo.jpeg" alt="Yugality" className="w-full h-full object-contain" />
           </motion.div>
         </motion.div>
 

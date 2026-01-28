@@ -85,7 +85,7 @@ const itemVariants = {
           <motion.img 
             src="/logo.jpeg" 
             alt="Yugality" 
-            className="w-10 h-10 object-cover shadow-sm rounded-lg"
+            className="w-10 h-10 object-contain shadow-sm"
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
           />

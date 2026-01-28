@@ -69,7 +69,7 @@ const Auth = () => {
           className="text-center mb-12"
         >
           <div className="flex flex-col items-center gap-4 mb-8">
-            <img src="/logo.jpeg" alt="Yugality" className="h-16 w-auto" />
+            <img src="/logo.jpeg" alt="Yugality" className="h-20 w-20 object-contain" />
             <div className="text-center">
               <h1 className="text-4xl font-semibold text-black tracking-tight mb-2">
                 Yugality

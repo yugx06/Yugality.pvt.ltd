@@ -228,9 +228,9 @@ const Landing = () => {
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.3 }}
-                  className="w-14 h-14 rounded-xl overflow-hidden shadow-sm group-hover:shadow-lg transition-shadow"
+                  className="w-14 h-14 overflow-hidden shadow-sm group-hover:shadow-lg transition-shadow bg-white p-1"
                 >
-                  <img src="/logo.jpeg" alt="Yugality" className="w-full h-full object-cover" />
+                  <img src="/logo.jpeg" alt="Yugality" className="w-full h-full object-contain" />
                 </motion.div>
                 <span className="text-xl font-semibold text-black tracking-tight">Yugality</span>
               </Link>
@@ -559,7 +559,7 @@ const Landing = () => {
                   alt="AI Assistant"
                   animate={{ y: [0, -20, 0], scale: [1, 1.05, 1] }}
                   transition={{ duration: 5, repeat: Infinity }}
-                  className="w-48 h-48 object-contain rounded-2xl shadow-lg"
+                  className="w-48 h-48 object-contain shadow-lg bg-white p-4"
                 />
               </motion.div>
             </div>
@@ -927,9 +927,9 @@ const Landing = () => {
                   <motion.div
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.3 }}
-                    className="w-12 h-12 rounded-xl overflow-hidden shadow-sm group-hover:shadow-lg transition-shadow"
+                    className="w-12 h-12 overflow-hidden shadow-sm group-hover:shadow-lg transition-shadow bg-white p-1"
                   >
-                    <img src="/logo.jpeg" alt="Yugality" className="w-full h-full object-cover" />
+                    <img src="/logo.jpeg" alt="Yugality" className="w-full h-full object-contain" />
                   </motion.div>
                   <span className="text-2xl font-bold text-black">Yugality</span>
                 </Link>
