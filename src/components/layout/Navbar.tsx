@@ -87,7 +87,8 @@ export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle, onAIAss
         {/* Right Actions */}
         <div className="flex items-center gap-3">
           {/* AI Assistant Toggle */}
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          {/* AI Assistant Toggle */}
+          {/* <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button 
               variant="ghost" 
               size="sm" 
@@ -100,7 +101,7 @@ export const Navbar = ({ sidebarWidth, emergencyMode, onEmergencyToggle, onAIAss
               <Bot className="w-4 h-4" />
               <span className="hidden sm:inline text-xs font-medium">{t('AI')}</span>
             </Button>
-          </motion.div>
+          </motion.div> */}
 
           {/* Emergency Mode Toggle */}
           <motion.div

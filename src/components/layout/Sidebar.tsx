@@ -13,6 +13,7 @@ import {
   ChevronDown,
   UserCircle,
   Shield,
+  StickyNote,
   Briefcase,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -33,6 +34,7 @@ const menuItems = [
   { icon: Calendar, labelKey: "Calendar", path: "/calendar", roles: ["lawyer"] },
   { icon: Bot, labelKey: "AI Assistant", path: "/ai-assistant", roles: ["lawyer"] },
   { icon: BookOpen, labelKey: "Research", path: "/research", roles: ["lawyer"] },
+  { icon: StickyNote, labelKey: "Notepad", path: "/notepad", roles: ["lawyer"] },
   { icon: Receipt, labelKey: "Billing", path: "/billing", roles: ["lawyer"] },
   { icon: UserCircle, labelKey: "Profile", path: "/profile", roles: ["lawyer"] },
 ];

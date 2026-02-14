@@ -17,6 +17,8 @@ import Research from "./pages/Research";
 import Billing from "./pages/Billing";
 import Users from "./pages/Users";
 import Briefcase from "./pages/Briefcase";
+import Notepad from "./pages/Notepad";
+
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,6 +41,7 @@ const App = () => (
               <Route path="/ai-assistant" element={<ProtectedRoute><AIAssistant /></ProtectedRoute>} />
               <Route path="/research" element={<ProtectedRoute><Research /></ProtectedRoute>} />
               <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
+              <Route path="/notepad" element={<ProtectedRoute><Notepad /></ProtectedRoute>} />
               <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
               <Route path="/users/lawyers" element={<ProtectedRoute><Users /></ProtectedRoute>} />
               <Route path="/users/clients" element={<ProtectedRoute><Users /></ProtectedRoute>} />
