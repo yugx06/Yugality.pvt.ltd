@@ -11,6 +11,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
 
 interface CalendarEvent {
   id: number;
@@ -130,7 +134,7 @@ const initialEvents: CalendarEvent[] = [
 
 const Calendar = () => {
   const { t } = useLanguage();
-  const [view, setView] = useState<"day" | "week" | "month" | "3-month">("week");
+  const [view, setView] = useState<"day" | "week" | "month">("week");
   const [currentDate, setCurrentDate] = useState(new Date(2026, 0, 6));
   const [events, setEvents] = useState<CalendarEvent[]>(initialEvents);
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -237,8 +241,10 @@ const Calendar = () => {
 
   const navigateWeek = (direction: number) => {
     const newDate = new Date(currentDate);
-    if (view === '3-month') {
-      newDate.setMonth(currentDate.getMonth() + (direction * 3));
+    if (view === 'month') {
+      newDate.setMonth(currentDate.getMonth() + direction);
+    } else if (view === 'day') {
+      newDate.setDate(currentDate.getDate() + direction);
     } else {
       newDate.setDate(currentDate.getDate() + (direction * 7));
     }
@@ -313,7 +319,7 @@ const Calendar = () => {
           </div>
           <div className="flex gap-2">
             <div className="flex bg-card rounded-lg border border-gray-300 p-1">
-              {["day", "week", "month", "3-month"].map((v) => (
+              {["day", "week", "month"].map((v) => (
                 <button
                   key={v}
                   onClick={() => setView(v as typeof view)}
@@ -324,6 +330,24 @@ const Calendar = () => {
                 </button>
               ))}
             </div>
+            
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="gap-2 border-primary/20 hover:bg-primary/5">
+                  <CalendarIcon className="w-4 h-4" />
+                  {format(currentDate, "MMM yyyy")}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="end">
+                <CalendarComponent
+                  mode="single"
+                  selected={currentDate}
+                  onSelect={(date) => date && setCurrentDate(date)}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+
             <Button onClick={() => setShowAddDialog(true)} className="yugality-button-gold gap-2">
               <Plus className="w-4 h-4" /> {t("Add")} Event
             </Button>
@@ -337,10 +361,10 @@ const Calendar = () => {
           transition={{ delay: 0.1 }}
           className="yugality-card overflow-hidden"
         >
-          {view === '3-month' ? (
-            /* 3-Month View */
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
-              {[0, 1, 2].map((monthOffset) => {
+          {view === 'month' ? (
+            /* Month View */
+            <div className="grid grid-cols-1 p-6">
+              {[0].map((monthOffset) => {
                 const monthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + monthOffset, 1);
                 const monthDays = generateMonthDays(monthDate);
                 const monthEvents = getMonthEvents(monthOffset);
@@ -370,7 +394,7 @@ const Calendar = () => {
                     <div className="grid grid-cols-7">
                       {monthDays.map((day, index) => {
                         if (day === null) {
-                          return <div key={`empty-${index}`} className="aspect-square border-r border-b border-gray-300 last:border-r-0" />;
+                          return <div key={`empty-${index}`} className="aspect-[1.2] border-r border-b border-gray-300 last:border-r-0" />;
                         }
                         
                         const dayDate = new Date(monthDate.getFullYear(), monthDate.getMonth(), day);
@@ -387,7 +411,7 @@ const Calendar = () => {
                         return (
                           <div
                             key={index}
-                            className="aspect-square border-r border-b border-gray-300 last:border-r-0 p-1 hover:bg-muted/20 transition-colors cursor-pointer group relative"
+                            className="aspect-[1.2] border-r border-b border-gray-300 last:border-r-0 p-1 hover:bg-muted/20 transition-colors cursor-pointer group relative"
                             onClick={() => {
                               setCurrentDate(dayDate);
                               setShowAddDialog(true);
@@ -398,8 +422,8 @@ const Calendar = () => {
                             }`}>
                               {day}
                             </div>
-                            <div className="flex flex-wrap gap-0.5 mt-1">
-                              {dayEvents.slice(0, 3).map((event) => (
+                            <div className="flex flex-col gap-1 mt-1 overflow-hidden">
+                              {dayEvents.slice(0, 4).map((event) => (
                                 <div
                                   key={event.id}
                                   onClick={(e) => {
@@ -407,35 +431,18 @@ const Calendar = () => {
                                     setSelectedEvent(event);
                                     setShowEditDialog(true);
                                   }}
-                                  className={`w-1 h-1 rounded-full ${
-                                    event.type === 'hearing' ? 'bg-red-500' :
-                                    event.type === 'meeting' ? 'bg-blue-500' :
-                                    event.type === 'consultation' ? 'bg-emerald-500' :
-                                    'bg-amber-500'
+                                  className={`text-[10px] px-1 py-0.5 rounded truncate ${
+                                    getTypeColor(event.type)
                                   }`}
                                   title={event.title}
-                                />
+                                >
+                                  {event.title}
+                                </div>
                               ))}
-                              {dayEvents.length > 3 && (
-                                <span className="text-[8px] text-muted-foreground">+{dayEvents.length - 3}</span>
+                              {dayEvents.length > 4 && (
+                                <span className="text-[10px] text-muted-foreground pl-1">+{dayEvents.length - 4} more</span>
                               )}
                             </div>
-                            {/* Hover tooltip */}
-                            {dayEvents.length > 0 && (
-                              <div className="absolute left-0 top-full mt-1 z-10 hidden group-hover:block bg-popover border border-border rounded-lg shadow-lg p-2 min-w-[200px]">
-                                <div className="space-y-1">
-                                  {dayEvents.map((event) => (
-                                    <div key={event.id} className="text-xs">
-                                      <div className="flex items-center gap-1">
-                                        {getTypeIcon(event.type)}
-                                        <span className="font-medium">{event.title}</span>
-                                      </div>
-                                      <span className="text-muted-foreground">{event.time}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
                           </div>
                         );
                       })}

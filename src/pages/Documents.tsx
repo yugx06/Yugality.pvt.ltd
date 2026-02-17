@@ -2,22 +2,56 @@ import { motion, AnimatePresence } from "framer-motion";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { 
   FileText, Upload, Search, Filter, Grid, List, FileCheck, FileClock, 
-  AlertCircle, Eye, Download, Trash2, X, File, Image, FileSpreadsheet, Plus, Edit, Copy, ScanText 
+  AlertCircle, Eye, Download, Trash2, X, File, Image, FileSpreadsheet, Plus, Edit, Copy, ScanText, Folder, ChevronRight, Home, FolderPlus
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { useState, useCallback, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
+import { format } from "date-fns";
 
-const documents = [
-  { id: 1, name: "Counter Affidavit - Patel Industries", case: "Patel Industries vs. SEBI", type: "Affidavit", status: "pending", date: "Jan 2, 2026", size: "2.4 MB", fileType: "pdf", submittedBy: "Adv. Rajesh Kumar", submittedTo: "Client: Priya Sharma" },
-  { id: 2, name: "Evidence Bundle Vol. 1", case: "Singh vs. State of Maharashtra", type: "Evidence", status: "filed", date: "Jan 1, 2026", size: "15.8 MB", fileType: "pdf", submittedBy: "Client: Amit Singh", submittedTo: "Adv. Neha Verma" },
-  { id: 3, name: "Legal Opinion - Property Rights", case: "Verma Property Dispute", type: "Opinion", status: "urgent", date: "Dec 30, 2025", size: "845 KB", fileType: "docx", submittedBy: "Adv. Rajesh Kumar", submittedTo: "Client: Ravi Verma" },
-  { id: 4, name: "Settlement Agreement Draft v3", case: "Kumar vs. Kumar", type: "Agreement", status: "filed", date: "Dec 28, 2025", size: "1.2 MB", fileType: "pdf", submittedBy: "Client: Anjali Kumar", submittedTo: "Adv. Priya Sharma" },
-  { id: 5, name: "Witness Statement - Sharma", case: "Sharma vs. National Bank", type: "Statement", status: "pending", date: "Dec 26, 2025", size: "520 KB", fileType: "docx", submittedBy: "Adv. Neha Verma", submittedTo: "Court" },
-  { id: 6, name: "Court Order - Interim Relief", case: "Patel Industries vs. SEBI", type: "Order", status: "filed", date: "Dec 22, 2025", size: "340 KB", fileType: "pdf", submittedBy: "Court", submittedTo: "Adv. Rajesh Kumar" },
+// Types
+interface FolderType {
+  id: string;
+  name: string;
+  parentId: string | null;
+  createdAt: string;
+}
+
+interface DocumentType {
+  id: string;
+  name: string;
+  case: string;
+  type: string;
+  status: string;
+  date: string;
+  size: string;
+  fileType: string;
+  submittedBy: string;
+  submittedTo: string;
+  folderId: string | null;
+}
+
+// Mock Data
+const initialFolders: FolderType[] = [
+  { id: "f1", name: "Client Cases", parentId: null, createdAt: new Date().toISOString() },
+  { id: "f2", name: "Court Orders", parentId: null, createdAt: new Date().toISOString() },
+  { id: "f3", name: "Patel Industries", parentId: "f1", createdAt: new Date().toISOString() },
+  { id: "f4", name: "Sharma vs Bank", parentId: "f1", createdAt: new Date().toISOString() },
+];
+
+const initialDocuments: DocumentType[] = [
+  { id: "1", name: "Counter Affidavit - Patel Industries", case: "Patel Industries vs. SEBI", type: "Affidavit", status: "pending", date: "Jan 2, 2026", size: "2.4 MB", fileType: "pdf", submittedBy: "Adv. Rajesh Kumar", submittedTo: "Client: Priya Sharma", folderId: "f3" },
+  { id: "2", name: "Evidence Bundle Vol. 1", case: "Singh vs. State of Maharashtra", type: "Evidence", status: "filed", date: "Jan 1, 2026", size: "15.8 MB", fileType: "pdf", submittedBy: "Client: Amit Singh", submittedTo: "Adv. Neha Verma", folderId: "f1" },
+  { id: "3", name: "Legal Opinion - Property Rights", case: "Verma Property Dispute", type: "Opinion", status: "urgent", date: "Dec 30, 2025", size: "845 KB", fileType: "docx", submittedBy: "Adv. Rajesh Kumar", submittedTo: "Client: Ravi Verma", folderId: null },
+  { id: "4", name: "Settlement Agreement Draft v3", case: "Kumar vs. Kumar", type: "Agreement", status: "filed", date: "Dec 28, 2025", size: "1.2 MB", fileType: "pdf", submittedBy: "Client: Anjali Kumar", submittedTo: "Adv. Priya Sharma", folderId: null },
+  { id: "5", name: "Witness Statement - Sharma", case: "Sharma vs. National Bank", type: "Statement", status: "pending", date: "Dec 26, 2025", size: "520 KB", fileType: "docx", submittedBy: "Adv. Neha Verma", submittedTo: "Court", folderId: "f4" },
+  { id: "6", name: "Court Order - Interim Relief", case: "Patel Industries vs. SEBI", type: "Order", status: "filed", date: "Dec 22, 2025", size: "340 KB", fileType: "pdf", submittedBy: "Court", submittedTo: "Adv. Rajesh Kumar", folderId: "f2" },
 ];
 
 const contracts = [
@@ -52,11 +86,18 @@ const Documents = () => {
   const { user } = useAuth();
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [isDragging, setIsDragging] = useState(false);
-  const [selectedDoc, setSelectedDoc] = useState<typeof documents[0] | null>(null);
+  const [selectedDoc, setSelectedDoc] = useState<DocumentType | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
   const [activeSection, setActiveSection] = useState<"documents" | "contracts" | "policies">("documents");
+  
+  // Folder State
+  const [folders, setFolders] = useState<FolderType[]>(initialFolders);
+  const [documents, setDocuments] = useState<DocumentType[]>(initialDocuments);
+  const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
+  const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
+  const [newFolderName, setNewFolderName] = useState("");
 
   useEffect(() => {
     const hash = location.hash.substring(1);
@@ -82,10 +123,50 @@ const Documents = () => {
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    // Handle file drop logic here
     const files = Array.from(e.dataTransfer.files);
-    console.log("Dropped files:", files);
-  }, []);
+    if (files.length > 0) {
+      // Simulate file upload
+      const newDocs = files.map(file => ({
+        id: crypto.randomUUID(),
+        name: file.name,
+        case: "Unassigned",
+        type: "Uploaded",
+        status: "pending",
+        date: format(new Date(), "MMM d, yyyy"),
+        size: (file.size / 1024 / 1024).toFixed(1) + " MB",
+        fileType: file.name.split('.').pop() || "unknown",
+        submittedBy: "Me",
+        submittedTo: "System",
+        folderId: currentFolderId
+      }));
+      setDocuments(prev => [...newDocs, ...prev]);
+      toast.success(`${files.length} file(s) uploaded successfully`);
+    }
+  }, [currentFolderId]);
+
+  const handleCreateFolder = () => {
+    if (!newFolderName.trim()) return;
+    const newFolder: FolderType = {
+      id: crypto.randomUUID(),
+      name: newFolderName,
+      parentId: currentFolderId,
+      createdAt: new Date().toISOString()
+    };
+    setFolders([...folders, newFolder]);
+    setNewFolderName("");
+    setIsCreateFolderOpen(false);
+    toast.success("Folder created successfully");
+  };
+
+  const getBreadcrumbs = () => {
+    const crumbs = [];
+    let current = folders.find(f => f.id === currentFolderId);
+    while (current) {
+      crumbs.unshift(current);
+      current = folders.find(f => f.id === current.parentId);
+    }
+    return crumbs;
+  };
 
   const getStatusBadge = (status: string) => {
     const isClient = user?.role === 'client';
@@ -117,16 +198,33 @@ const Documents = () => {
       case "docx": return <File className="w-5 h-5 text-tech" />;
       case "xlsx": return <FileSpreadsheet className="w-5 h-5 text-green-500" />;
       case "image": return <Image className="w-5 h-5 text-primary" />;
+      case "folder": return <Folder className="w-5 h-5 text-yellow-500 fill-yellow-500/20" />;
       default: return <FileText className="w-5 h-5 text-muted-foreground" />;
     }
   };
 
-  const filteredDocs = documents.filter(doc => {
-    const matchesSearch = doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          doc.case.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter = activeFilter === "All" || doc.type === activeFilter;
-    return matchesSearch && matchesFilter;
-  });
+  // Filter Logic
+  const currentFolders = folders.filter(f => f.parentId === currentFolderId);
+  const currentDocs = documents.filter(d => d.folderId === currentFolderId);
+  
+  // Search Logic
+  const isSearching = searchQuery.length > 0;
+  
+  const filteredFolders = isSearching 
+    ? folders.filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    : currentFolders;
+
+  const filteredDocs = isSearching
+    ? documents.filter(doc => {
+        const matchesSearch = doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                              doc.case.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesFilter = activeFilter === "All" || doc.type === activeFilter;
+        return matchesSearch && matchesFilter;
+      })
+    : currentDocs.filter(doc => {
+        const matchesFilter = activeFilter === "All" || doc.type === activeFilter;
+        return matchesFilter;
+      });
 
   return (
     <DashboardLayout>
@@ -153,6 +251,35 @@ const Documents = () => {
               <ScanText className="w-4 h-4" /> 
               OCR Scan
             </Button>
+            {activeSection === "documents" && (
+              <Dialog open={isCreateFolderOpen} onOpenChange={setIsCreateFolderOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="gap-2">
+                    <FolderPlus className="w-4 h-4" />
+                    New Folder
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Create New Folder</DialogTitle>
+                  </DialogHeader>
+                  <div className="py-4">
+                    <Label htmlFor="folder-name">Folder Name</Label>
+                    <Input
+                      id="folder-name"
+                      value={newFolderName}
+                      onChange={(e) => setNewFolderName(e.target.value)}
+                      placeholder="Enter folder name..."
+                      className="mt-2"
+                    />
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setIsCreateFolderOpen(false)}>Cancel</Button>
+                    <Button onClick={handleCreateFolder}>Create</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
             <Button className="yugality-button-gold gap-2">
               <Upload className="w-4 h-4" /> 
               {activeSection === "contracts" ? "New Contract" : 
@@ -204,18 +331,18 @@ const Documents = () => {
             exit={{ opacity: 0 }}
             className="space-y-6"
           >
-        {/* Filters & Search */}
+        {/* Filters & Search & Breadcrumbs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="yugality-card p-4"
+          className="yugality-card p-4 space-y-4"
         >
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input 
-                placeholder="Search documents..." 
+                placeholder="Search documents and folders..." 
                 className="pl-10 bg-muted/30 border-border/50"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -247,6 +374,29 @@ const Documents = () => {
               </div>
             </div>
           </div>
+
+          {!isSearching && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground pb-2 overflow-x-auto">
+              <button 
+                onClick={() => setCurrentFolderId(null)}
+                className="flex items-center hover:text-primary transition-colors whitespace-nowrap"
+              >
+                <Home className="w-4 h-4 mr-1" />
+                Home
+              </button>
+              {getBreadcrumbs().map((folder) => (
+                <div key={folder.id} className="flex items-center whitespace-nowrap">
+                  <ChevronRight className="w-4 h-4 mx-1" />
+                  <button 
+                    onClick={() => setCurrentFolderId(folder.id)}
+                    className="hover:text-primary transition-colors"
+                  >
+                    {folder.name}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Filter Pills */}
           <AnimatePresence>
@@ -305,129 +455,161 @@ const Documents = () => {
             <p className={`font-medium mb-1 transition-colors ${isDragging ? 'text-primary' : 'text-foreground'}`}>
               {isDragging ? "Drop files to upload" : "Drop files here or click to upload"}
             </p>
-            <p className="text-muted-foreground text-sm">Supports PDF, DOC, DOCX up to 50MB</p>
+            <p className="text-muted-foreground text-sm">
+              Uploading to: {currentFolderId ? folders.find(f => f.id === currentFolderId)?.name : "Home"}
+            </p>
           </div>
         </motion.div>
 
-        {/* Documents View */}
-        {viewMode === "list" ? (
+        {/* Combined View (Folders + Files) */}
+        {filteredFolders.length === 0 && filteredDocs.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground">
+            <p>No items found in this location.</p>
+          </div>
+        ) : (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="yugality-card overflow-hidden"
+            className={viewMode === "list" ? "yugality-card overflow-hidden" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"}
           >
-            <table className="w-full">
-              <thead className="bg-muted/30 border-b border-border/50">
-                <tr>
-                  <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Document</th>
-                  <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider hidden md:table-cell">Case</th>
-                  {user?.role === 'admin' && (
-                    <>
-                      <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider hidden lg:table-cell">Submitted By</th>
-                      <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider hidden lg:table-cell">Submitted To</th>
-                    </>
-                  )}
-                  <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider hidden lg:table-cell">Type</th>
-                  <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
-                  <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider hidden sm:table-cell">Date</th>
-                  <th className="text-right px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/30">
+            {/* List View */}
+            {viewMode === "list" && (
+              <table className="w-full">
+                <thead className="bg-muted/30 border-b border-border/50">
+                  <tr>
+                    <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Name</th>
+                    <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider hidden md:table-cell">Type/Case</th>
+                    <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+                    <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider hidden sm:table-cell">Date</th>
+                    <th className="text-right px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border/30">
+                  {/* Folders */}
+                  {filteredFolders.map((folder, index) => (
+                    <motion.tr
+                      key={folder.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 + index * 0.05 }}
+                      whileHover={{ backgroundColor: "hsl(var(--muted) / 0.3)" }}
+                      className="transition-colors cursor-pointer group"
+                      onClick={() => setCurrentFolderId(folder.id)}
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <Folder className="w-5 h-5 text-yellow-500 fill-yellow-500/20" />
+                          <span className="text-sm font-medium text-foreground">{folder.name}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 hidden md:table-cell">
+                        <span className="text-sm text-muted-foreground">Folder</span>
+                      </td>
+                      <td className="px-6 py-4">--</td>
+                      <td className="px-6 py-4 hidden sm:table-cell">
+                         <span className="text-sm text-muted-foreground">{format(new Date(folder.createdAt), "MMM d, yyyy")}</span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                         <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                            <ChevronRight className="w-4 h-4" />
+                         </Button>
+                      </td>
+                    </motion.tr>
+                  ))}
+                  {/* Documents */}
+                  {filteredDocs.map((doc, index) => (
+                    <motion.tr
+                      key={doc.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 + (filteredFolders.length * 0.05) + index * 0.05 }}
+                      whileHover={{ backgroundColor: "hsl(var(--muted) / 0.3)" }}
+                      className="transition-colors cursor-pointer group"
+                      onClick={() => setSelectedDoc(doc)}
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          {getFileIcon(doc.fileType)}
+                          <div>
+                            <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{doc.name}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 hidden md:table-cell">
+                        <p className="text-sm text-muted-foreground">{doc.case}</p>
+                      </td>
+                      <td className="px-6 py-4">{getStatusBadge(doc.status)}</td>
+                      <td className="px-6 py-4 hidden sm:table-cell">
+                        <p className="text-sm text-muted-foreground">{doc.date}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                          <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                            <Download className="w-4 h-4" />
+                          </Button>
+                          <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-destructive">
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+
+            {/* Grid View */}
+            {viewMode === "grid" && (
+              <>
+                {filteredFolders.map((folder, index) => (
+                  <motion.div
+                    key={folder.id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.1 + index * 0.05 }}
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    className="yugality-card-interactive p-4 cursor-pointer bg-muted/20"
+                    onClick={() => setCurrentFolderId(folder.id)}
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <Folder className="w-10 h-10 text-yellow-500 fill-yellow-500/20" />
+                      <h4 className="font-medium text-foreground text-sm line-clamp-1">{folder.name}</h4>
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-2">
+                      Folder • {format(new Date(folder.createdAt), "MMM d, yyyy")}
+                    </div>
+                  </motion.div>
+                ))}
                 {filteredDocs.map((doc, index) => (
-                  <motion.tr
+                  <motion.div
                     key={doc.id}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 + index * 0.05 }}
-                    whileHover={{ backgroundColor: "hsl(var(--muted) / 0.3)" }}
-                    className="transition-colors cursor-pointer group"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.2 + (filteredFolders.length * 0.05) + index * 0.05 }}
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    className="yugality-card-interactive p-4 cursor-pointer"
                     onClick={() => setSelectedDoc(doc)}
                   >
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <motion.div whileHover={{ scale: 1.1, rotate: 5 }}>
-                          {getFileIcon(doc.fileType)}
-                        </motion.div>
-                        <div>
-                          <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{doc.name}</p>
-                          <p className="text-xs text-muted-foreground md:hidden">{doc.case}</p>
-                        </div>
+                     <div className="flex items-start justify-between mb-3">
+                      <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
+                        {getFileIcon(doc.fileType)}
                       </div>
-                    </td>
-                    <td className="px-6 py-4 hidden md:table-cell">
-                      <p className="text-sm text-muted-foreground">{doc.case}</p>
-                    </td>
-                    {user?.role === 'admin' && (
-                      <>
-                        <td className="px-6 py-4 hidden lg:table-cell">
-                          <p className="text-sm font-medium text-blue-600">{doc.submittedBy}</p>
-                        </td>
-                        <td className="px-6 py-4 hidden lg:table-cell">
-                          <p className="text-sm font-medium text-green-600">{doc.submittedTo}</p>
-                        </td>
-                      </>
-                    )}
-                    <td className="px-6 py-4 hidden lg:table-cell">
-                      <p className="text-sm text-muted-foreground">{doc.type}</p>
-                    </td>
-                    <td className="px-6 py-4">{getStatusBadge(doc.status)}</td>
-                    <td className="px-6 py-4 hidden sm:table-cell">
-                      <p className="text-sm text-muted-foreground">{doc.date}</p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground">
-                          <Eye className="w-4 h-4" />
-                        </Button>
-                        <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground">
-                          <Download className="w-4 h-4" />
-                        </Button>
-                        <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-destructive">
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </motion.div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-          >
-            {filteredDocs.map((doc, index) => (
-              <motion.div
-                key={doc.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 + index * 0.05 }}
-                whileHover={{ y: -4, scale: 1.02 }}
-                className="yugality-card-interactive p-4 cursor-pointer"
-                onClick={() => setSelectedDoc(doc)}
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <motion.div 
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center"
-                  >
-                    {getFileIcon(doc.fileType)}
+                      {getStatusBadge(doc.status)}
+                    </div>
+                    <h4 className="font-medium text-foreground text-sm mb-1 line-clamp-2">{doc.name}</h4>
+                    <p className="text-xs text-muted-foreground mb-2">{doc.case}</p>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>{doc.size}</span>
+                      <span>{doc.date}</span>
+                    </div>
                   </motion.div>
-                  {getStatusBadge(doc.status)}
-                </div>
-                <h4 className="font-medium text-foreground text-sm mb-1 line-clamp-2">{doc.name}</h4>
-                <p className="text-xs text-muted-foreground mb-2">{doc.case}</p>
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>{doc.size}</span>
-                  <span>{doc.date}</span>
-                </div>
-              </motion.div>
-            ))}
+                ))}
+              </>
+            )}
           </motion.div>
         )}
 
@@ -514,9 +696,10 @@ const Documents = () => {
           </motion.div>
         )}
 
-        {/* Contracts Section */}
+        {/* Layout for Contracts/Policies remains the same (omitted for brevity, assume they handle their own sections) */}
         {activeSection === "contracts" && (
-          <motion.div
+            // ... (Previous implementation for contracts)
+             <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -563,9 +746,9 @@ const Documents = () => {
           </motion.div>
         )}
 
-        {/* Policy Templates Section */}
         {activeSection === "policies" && (
-          <motion.div
+            // ... (Previous implementation for policies)
+             <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
