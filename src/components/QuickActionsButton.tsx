@@ -18,10 +18,7 @@ export const QuickActionsButton = () => {
   const [savedNotes, setSavedNotes] = useState<string[]>([]);
 
   const actions = [
-    { icon: FileText, label: "New Document", color: "bg-blue-600", onClick: () => {} },
     { icon: Calendar, label: "Add Event", color: "bg-purple-600", onClick: () => {} },
-    { icon: Users, label: "New Client", color: "bg-green-600", onClick: () => {} },
-    { icon: Scale, label: "New Case", color: "bg-amber-600", onClick: () => {} },
     { icon: StickyNote, label: "Quick Note", color: "bg-yellow-500", onClick: () => { setShowNotepad(true); setIsOpen(false); } },
     { icon: Bot, label: "Ask AI", color: "bg-gradient-to-br from-indigo-600 to-purple-600", onClick: () => {} },
   ];

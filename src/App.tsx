@@ -17,6 +17,7 @@ import Research from "./pages/Research";
 import Billing from "./pages/Billing";
 import Users from "./pages/Users";
 import Briefcase from "./pages/Briefcase";
+import ProjectDetails from "./pages/ProjectDetails";
 import Chronology from "./pages/Chronology";
 import Notepad from "./pages/Notepad";
 import NotFound from "./pages/NotFound";
@@ -36,6 +37,7 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
               <Route path="/briefcase" element={<ProtectedRoute><Briefcase /></ProtectedRoute>} />
+              <Route path="/briefcase/:id" element={<ProtectedRoute><ProjectDetails /></ProtectedRoute>} />
               <Route path="/documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
               <Route path="/calendar" element={<ProtectedRoute><Calendar /></ProtectedRoute>} />
               <Route path="/ai-assistant" element={<ProtectedRoute><AIAssistant /></ProtectedRoute>} />

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -44,6 +45,7 @@ const repositories: Repository[] = [
 ];
 
 const Briefcase = () => {
+  const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"date" | "name">("date");
@@ -176,7 +178,8 @@ const Briefcase = () => {
                           key={project.id}
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          className="border-b border-border hover:bg-muted/50 transition-colors"
+                          className="border-b border-border hover:bg-muted/50 transition-colors cursor-pointer"
+                          onClick={() => navigate(`/briefcase/${project.id}`)}
                         >
                           <td className="p-4">
                             <div className="flex items-center gap-2">
