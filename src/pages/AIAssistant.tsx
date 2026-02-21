@@ -215,10 +215,10 @@ const AIAssistant = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" className="gap-2 h-9 border-border/50 hover:bg-muted">
+            {/* <Button variant="outline" size="sm" className="gap-2 h-9 border-border/50 hover:bg-muted">
               <Bot className="w-4 h-4" />
               Get Lawyer Support
-            </Button>
+            </Button> */}
             <Button size="sm" className="gap-2 h-9 bg-primary hover:bg-primary/90">
               <Plus className="w-4 h-4" />
               New Draft

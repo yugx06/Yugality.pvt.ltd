@@ -326,7 +326,7 @@ const Research = () => {
           <Card className="p-8">
             <div className="flex items-center gap-3 mb-6">
               <Search className="w-6 h-6 text-muted-foreground" />
-              <h2 className="text-xl font-semibold">{t("Advanced Legal Search")}</h2>
+              <h2 className="text-xl font-semibold">{t("AI Research Assistant")}</h2>
             </div>
 
             {/* Main Search Bar */}
@@ -414,7 +414,7 @@ const Research = () => {
               <TabsTrigger value="results">Search Results</TabsTrigger>
               <TabsTrigger value="databases">Databases</TabsTrigger>
               <TabsTrigger value="saved">Saved Research</TabsTrigger>
-              <TabsTrigger value="assistant">AI Research Assistant</TabsTrigger>
+              <TabsTrigger value="assistant">Latest Legal News</TabsTrigger>
             </TabsList>
 
             <TabsContent value="results" className="space-y-4 mt-6">
@@ -538,14 +538,14 @@ const Research = () => {
             </TabsContent>
 
             <TabsContent value="assistant" className="space-y-6">
-              {/* AI Research Assistant Header */}
+              {/* Latest Legal News Header */}
               <Card className="p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 border-blue-200 dark:border-blue-800">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center">
                     <Brain className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold">AI Research Assistant</h3>
+                    <h3 className="text-xl font-semibold">Latest Legal News</h3>
                     <p className="text-sm text-muted-foreground">Powered by advanced legal AI</p>
                   </div>
                 </div>

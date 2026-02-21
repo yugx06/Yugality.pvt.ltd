@@ -12,7 +12,7 @@ import {
   Clock,
   ChevronDown,
   ChevronRight,
-  // Receipt,
+  Receipt,
   // UserCircle,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -35,7 +35,7 @@ const menuItems = [
   { icon: BookOpen, labelKey: "Research", path: "/research", roles: ["lawyer"] },
   { icon: StickyNote, labelKey: "Notepad", path: "/notepad", roles: ["lawyer"] },
   { icon: Clock, labelKey: "Chronology", path: "/chronology", roles: ["lawyer"] },
-  // { icon: Receipt, labelKey: "Billing", path: "/billing", roles: ["lawyer"] },
+  { icon: Receipt, labelKey: "Billing", path: "/billing", roles: ["lawyer"] },
   // { icon: UserCircle, labelKey: "Profile", path: "/profile", roles: ["lawyer"] },
 ];
 

@@ -18,12 +18,12 @@ import { Separator } from "@/components/ui/separator";
 
 // Mock Data
 const projectData = {
-  1: { name: "Property Dispute Cases", lastUpdated: "Jan 24, 2026", owner: "Intern1" },
-  2: { name: "Corporate Agreements (Clean)", lastUpdated: "Jan 20, 2026", owner: "Intern1" },
-  3: { name: "Family Law Matters", lastUpdated: "Jan 18, 2026", owner: "Intern1" },
-  4: { name: "Criminal Defense Cases", lastUpdated: "Jan 15, 2026", owner: "Senior Partner" },
-  5: { name: "Employment Contracts", lastUpdated: "Jan 12, 2026", owner: "Associate" },
-  6: { name: "Real Estate Transactions", lastUpdated: "Jan 10, 2026", owner: "Senior Partner" },
+  1: { name: "A.K. Gopalan vs UOI", lastUpdated: "Jan 24, 2026", owner: "Intern1" },
+  2: { name: "Ashok Kumar Yadav and Ors. vs. State of Haryana and Ors", lastUpdated: "Jan 20, 2026", owner: "Intern1" },
+  3: { name: "Arnesh Kumar v. State of Bihar (2014)", lastUpdated: "Jan 18, 2026", owner: "Intern1" },
+  4: { name: "Manjeet Singh v. National Insurance Company Ltd.", lastUpdated: "Jan 15, 2026", owner: "Senior Partner" },
+  5: { name: "Mohini Jain v. State of Karnataka (1992)", lastUpdated: "Jan 12, 2026", owner: "Associate" },
+  6: { name: "Shayara Bano v. Union of India (2017)", lastUpdated: "Jan 10, 2026", owner: "Senior Partner" },
   7: { name: "Intellectual Property Files", lastUpdated: "Jan 08, 2026", owner: "Intern1" },
   8: { name: "Tax Advisory Documents", lastUpdated: "Dec 30, 2025", owner: "Intern1" },
 };
