@@ -251,6 +251,10 @@ const Documents = () => {
               <ScanText className="w-4 h-4" /> 
               OCR Scan
             </Button>
+            <Button variant="outline" className="gap-2">
+              <Plus className="w-4 h-4" />
+              Add to Repositories
+            </Button>
             {activeSection === "documents" && (
               <Dialog open={isCreateFolderOpen} onOpenChange={setIsCreateFolderOpen}>
                 <DialogTrigger asChild>

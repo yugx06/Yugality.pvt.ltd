@@ -537,131 +537,103 @@ const Research = () => {
               </div>
             </TabsContent>
 
-            <TabsContent value="assistant" className="space-y-6">
-              {/* Latest Legal News Header */}
-              <Card className="p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 border-blue-200 dark:border-blue-800">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center">
-                    <Brain className="w-6 h-6 text-white" />
+            <TabsContent value="assistant" className="space-y-8 mt-6">
+              {/* Today's Top Stories */}
+              <div>
+                <h2 className="text-2xl font-bold text-foreground mb-1">Today's Top Stories</h2>
+                <div className="w-16 h-0.5 bg-[#8B1A4A] mb-6" />
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Featured Story */}
+                  <div className="lg:col-span-1 cursor-pointer group">
+                    <div className="w-full aspect-[4/3] rounded-lg overflow-hidden mb-3 bg-gray-200">
+                      <img
+                        src="https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=600&q=80"
+                        alt="CJI Surya Kant"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <h3 className="text-base font-bold text-foreground group-hover:text-[#8B1A4A] transition-colors leading-snug mb-2">
+                      Cyber crimes cause financial and emotional damage: CJI Surya Kant
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      The CJI underlined that cybercrimes should not be viewed as a niche technological issue, because it represents a barrier to justice at the most fundamental level.
+                    </p>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">Latest Legal News</h3>
-                    <p className="text-sm text-muted-foreground">Powered by advanced legal AI</p>
+
+                  {/* Middle Column */}
+                  <div className="flex flex-col gap-5">
+                    {[
+                      {
+                        img: "https://images.unsplash.com/photo-1436450412740-6b988f486c6b?w=200&q=80",
+                        title: "Jharkhand High Court drops contempt case against lawyer who told judge not to cross limits",
+                      },
+                      {
+                        img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=200&q=80",
+                        title: "Karnataka High Court quashes cheating case against Winzo over alleged PAN card misuse",
+                      },
+                      {
+                        img: "https://images.unsplash.com/photo-1580537659466-0a9bfa916a54?w=200&q=80",
+                        title: "Orissa High Court acquits man jailed for entering married woman's house to have consensual sex",
+                      },
+                    ].map((story, i) => (
+                      <div key={i} className="flex gap-3 cursor-pointer group">
+                        <div className="w-24 h-16 rounded-md overflow-hidden flex-shrink-0 bg-gray-200">
+                          <img
+                            src={story.img}
+                            alt={story.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
+                        <p className="text-sm font-semibold text-foreground group-hover:text-[#8B1A4A] transition-colors leading-snug">
+                          {story.title}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Right Column */}
+                  <div className="flex flex-col gap-5">
+                    {[
+                      {
+                        img: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=200&q=80",
+                        title: "Here is why US Supreme Court struck down Trump tariffs",
+                      },
+                      {
+                        img: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=200&q=80",
+                        title: "Reliance withdraws suit filed before Madras HC over piracy of its film Dhurandhar",
+                      },
+                      {
+                        img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=200&q=80",
+                        title: "Plea before Bombay High Court against State's decision to scrap 5% Muslim quota",
+                      },
+                    ].map((story, i) => (
+                      <div key={i} className="flex gap-3 cursor-pointer group">
+                        <div className="w-24 h-16 rounded-md overflow-hidden flex-shrink-0 bg-gray-200">
+                          <img
+                            src={story.img}
+                            alt={story.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
+                        <p className="text-sm font-semibold text-foreground group-hover:text-[#8B1A4A] transition-colors leading-snug">
+                          {story.title}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                <p className="text-sm">
-                  Get intelligent research recommendations, pattern analysis, and insights based on your practice areas and recent searches.
-                </p>
-              </Card>
 
-              {/* Trending Topics */}
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <TrendingUp className="w-5 h-5 text-blue-600" />
-                  <h3 className="text-lg font-semibold">Trending Legal Topics</h3>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {aiSuggestedTopics.map((topic) => (
-                    <Card key={topic.id} className="p-5 hover:shadow-lg transition-shadow cursor-pointer">
-                      <div className="flex items-start gap-3">
-                        <div className="text-3xl">{topic.icon}</div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h4 className="font-semibold">{topic.title}</h4>
-                            {topic.trending && (
-                              <Badge className="bg-orange-600 text-xs">
-                                <TrendingUp className="w-3 h-3 mr-1" />
-                                Trending
-                              </Badge>
-                            )}
-                          </div>
-                          <p className="text-sm text-muted-foreground mb-2">{topic.description}</p>
-                          <div className="flex items-center gap-3 text-xs">
-                            <Badge variant={topic.relevance === "High" ? "default" : "secondary"}>
-                              {topic.relevance} Relevance
-                            </Badge>
-                            <span className="text-muted-foreground">{topic.relatedCases} related cases</span>
-                          </div>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-
-              {/* AI Insights */}
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <Lightbulb className="w-5 h-5 text-yellow-600" />
-                  <h3 className="text-lg font-semibold">AI-Powered Insights</h3>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {aiInsights.map((insight) => (
-                    <Card key={insight.id} className="p-5">
-                      <div className="flex items-start gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                          <Sparkles className="w-5 h-5 text-blue-600" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Badge variant="outline" className="text-xs">{insight.type}</Badge>
-                            <Badge className={insight.impact === "High" ? "bg-orange-600" : "bg-gray-600"}>
-                              {insight.impact} Impact
-                            </Badge>
-                          </div>
-                          <h4 className="font-semibold mb-2">{insight.title}</h4>
-                          <p className="text-sm text-muted-foreground mb-2">{insight.description}</p>
-                          <p className="text-xs text-muted-foreground">
-                            Based on analysis of {insight.casesAnalyzed} cases
-                          </p>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-
-              {/* Recommended Research */}
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <BookOpen className="w-5 h-5 text-green-600" />
-                  <h3 className="text-lg font-semibold">Recommended for You</h3>
-                </div>
-                <div className="space-y-4">
-                  {recommendedResearch.map((rec) => (
-                    <Card key={rec.id} className="p-5">
-                      <h4 className="font-semibold mb-3 text-sm text-muted-foreground">{rec.title}</h4>
-                      <div className="space-y-2">
-                        {rec.cases.map((caseName, idx) => (
-                          <div key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors cursor-pointer">
-                            <FileText className="w-4 h-4 text-blue-600" />
-                            <span className="text-sm">{caseName}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-
-              {/* Quick AI Actions */}
-              <Card className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Quick AI Actions</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2">
-                    <Search className="w-5 h-5" />
-                    <span className="text-sm">Smart Case Search</span>
-                  </Button>
-                  <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2">
-                    <TrendingUp className="w-5 h-5" />
-                    <span className="text-sm">Precedent Analysis</span>
-                  </Button>
-                  <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2">
-                    <Brain className="w-5 h-5" />
-                    <span className="text-sm">Case Summarization</span>
+                {/* Load more */}
+                <div className="flex justify-center mt-8">
+                  <Button
+                    variant="outline"
+                    className="px-10 py-2 rounded-none border-foreground text-foreground hover:bg-foreground hover:text-background transition-colors text-sm"
+                  >
+                    Load more
                   </Button>
                 </div>
-              </Card>
+              </div>
             </TabsContent>
           </Tabs>
         </motion.div>

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { Search, Star, MoreVertical, Folder, Plus, Info, ScanText } from "lucide-react";
+import { Search, Star, MoreVertical, Folder, Plus, ScanText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,13 +19,7 @@ interface Project {
   starred: boolean;
 }
 
-interface Repository {
-  id: number;
-  name: string;
-  description: string;
-  lastUpdated: string;
-  fileCount: number;
-}
+
 
 const initialProjects: Project[] = [
   { id: 1, name: "A.K. Gopalan vs UOI [updated till 24.01.2026]", lastUpdated: "Jan 24, 2026", owner: "Intern1", starred: false },
@@ -38,11 +32,7 @@ const initialProjects: Project[] = [
   { id: 8, name: "Indira Nehru Gandhi v. Raj Narain (1975)", lastUpdated: "Dec 30, 2025", owner: "Intern1", starred: false },
 ];
 
-const repositories: Repository[] = [
-  { id: 1, name: "Supreme Court Cases", description: "Repository of all Supreme Court Cases.", lastUpdated: "30 Sep 2025", fileCount: 357 },
-  { id: 2, name: "High Court Judgments", description: "Repository of all High Court Judgments till date.", lastUpdated: "08 Oct 2025", fileCount: 512 },
-  { id: 3, name: "Legal Precedents Database", description: "All Legal Precedents, Case Laws and Citations", lastUpdated: "15 Jan 2026", fileCount: 1248 },
-];
+
 
 const Briefcase = () => {
   const navigate = useNavigate();
@@ -97,17 +87,7 @@ const Briefcase = () => {
           </p>
         </div>
 
-        {/* Action Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-muted/50 border border-border/50 rounded-lg p-4 flex items-center justify-between"
-        >
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Info className="w-4 h-4" />
-            <span>Action Required: Repositories are moving, migrate your queries now</span>
-          </div>
-        </motion.div>
+
 
         {/* Search and Actions Bar */}
         <div className="flex items-center gap-4">
@@ -154,13 +134,17 @@ const Briefcase = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           {/* Projects Table */}
-          <div className="lg:col-span-2">
+          <div>
             <Card>
               <CardContent className="p-0">
-                <div className="border-b border-border p-4">
+                <div className="border-b border-border p-4 flex items-center justify-between">
                   <h2 className="text-lg font-semibold text-foreground">Your Projects</h2>
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Plus className="w-4 h-4" />
+                    Add to Repositories
+                  </Button>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full">
@@ -215,45 +199,6 @@ const Briefcase = () => {
             </Card>
           </div>
 
-          {/* Repositories Sidebar */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <h2 className="text-lg font-semibold text-foreground">Repositories</h2>
-                <Info className="w-4 h-4 text-muted-foreground" />
-              </div>
-            </div>
-            
-            {repositories.map((repo) => (
-              <motion.div
-                key={repo.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                <Card className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-4 space-y-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-2">
-                        <Folder className="w-5 h-5 text-primary" />
-                        <h3 className="font-semibold text-foreground">{repo.name}</h3>
-                      </div>
-                      <Button variant="ghost" size="icon" className="h-6 w-6">
-                        <Star className="w-4 h-4 text-muted-foreground" />
-                      </Button>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{repo.description}</p>
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>Last updated on: {repo.lastUpdated}</span>
-                      <span>• {repo.fileCount} Files</span>
-                    </div>
-                    <Button variant="outline" size="sm" className="w-full">
-                      Open
-                    </Button>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </motion.div>
 

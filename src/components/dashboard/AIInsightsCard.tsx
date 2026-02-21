@@ -1,32 +1,15 @@
 import { motion } from "framer-motion";
-import { Bot, Lightbulb, ArrowRight, Sparkles, Search, Clock } from "lucide-react";
+import { Bot, Sparkles, Search, Clock, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-const insights = [
-  {
-    id: 1,
-    type: "reminder",
-    title: "Document Review Pending",
-    description: "3 documents from the Patel case haven't been reviewed yet.",
-    action: "Review Now",
-  },
-  {
-    id: 2,
-    type: "insight",
-    title: "Similar Case Found",
-    description: "A 2024 Supreme Court ruling may be relevant to Singh vs. State.",
-    action: "View Details",
-  },
-  {
-    id: 3,
-    type: "suggestion",
-    title: "Deadline Optimization",
-    description: "Consider filing early for Kumar case - court backlog expected.",
-    action: "Learn More",
-  },
+const recentSearches = [
+  { id: 1, query: "BNS Sections", time: "1 hour ago" },
+  { id: 2, query: "Civil Case Laws", time: "3 hours ago" },
+  { id: 3, query: "UN and its bodies", time: "Yesterday" },
+  { id: 4, query: "Procedural Law", time: "2 days ago" },
 ];
 
-const recentSearches = [
+const previousSearches = [
   { id: 1, query: "Property dispute precedents", time: "2 hours ago" },
   { id: 2, query: "Section 138 NI Act case laws", time: "5 hours ago" },
   { id: 3, query: "Divorce settlement guidelines", time: "1 day ago" },
@@ -46,6 +29,7 @@ export const AIInsightsCard = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-tech/5 via-transparent to-primary/3 pointer-events-none" />
       
       <div className="relative">
+        {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <motion.div 
             className="w-10 h-10 rounded-lg bg-tech/10 flex items-center justify-center"
@@ -68,55 +52,52 @@ export const AIInsightsCard = () => {
           </div>
         </div>
 
-        <div className="space-y-3">
-          {insights.map((insight, index) => (
-            <motion.div
-              key={insight.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 + index * 0.1 }}
-              whileHover={{ scale: 1.02, x: 4 }}
-              className="p-4 rounded-lg bg-muted/30 border border-tech/10 
-                         hover:border-tech/30 hover:bg-muted/50 transition-all duration-200 cursor-pointer group"
-            >
-              <div className="flex items-start gap-3">
-                <motion.div 
-                  className="w-8 h-8 rounded-lg bg-tech/10 flex items-center justify-center flex-shrink-0"
-                  whileHover={{ rotate: 15 }}
-                >
-                  <Lightbulb className="w-4 h-4 text-tech" />
-                </motion.div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-medium text-foreground mb-1 group-hover:text-tech transition-colors">
-                    {insight.title}
-                  </h4>
-                  <p className="text-xs text-muted-foreground line-clamp-2">{insight.description}</p>
-                  <motion.button 
-                    className="mt-2 text-xs text-tech hover:text-tech-light flex items-center gap-1 
-                               transition-all duration-200"
-                    whileHover={{ x: 4 }}
-                  >
-                    {t(insight.action)}
-                    <ArrowRight className="w-3 h-3" />
-                  </motion.button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Previous Search Section */}
-        <div className="mt-6 pt-6 border-t border-border/50">
-          <div className="flex items-center gap-2 mb-4">
+        {/* Recent Searches Section */}
+        <div>
+          <div className="flex items-center gap-2 mb-3">
             <Search className="w-4 h-4 text-tech" />
-            <h4 className="text-sm font-semibold text-foreground">{t("Previous Search")}</h4>
+            <h4 className="text-sm font-semibold text-foreground">{t("Recent Searches")}</h4>
           </div>
-          <div className="space-y-2">
-            {recentSearches.map((search) => (
+          <div className="space-y-1">
+            {recentSearches.map((search, index) => (
               <motion.div
                 key={search.id}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 + index * 0.07 }}
+                whileHover={{ x: 4 }}
+                className="p-3 rounded-lg cursor-pointer transition-all duration-200 
+                           flex items-center justify-between group
+                           border border-transparent hover:border-tech/20 hover:bg-muted/30"
+              >
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <Clock className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                  <span className="text-xs text-foreground truncate group-hover:text-tech transition-colors">
+                    {search.query}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <span className="text-xs text-muted-foreground">{search.time}</span>
+                  <ArrowRight className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 group-hover:text-tech transition-all duration-200" />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Previous Search Section */}
+        <div className="mt-6 pt-6 border-t border-border/50">
+          <div className="flex items-center gap-2 mb-3">
+            <Search className="w-4 h-4 text-tech" />
+            <h4 className="text-sm font-semibold text-foreground">{t("Previous Search")}</h4>
+          </div>
+          <div className="space-y-1">
+            {previousSearches.map((search, index) => (
+              <motion.div
+                key={search.id}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 + index * 0.07 }}
                 whileHover={{ x: 4, backgroundColor: "rgba(0, 0, 0, 0.02)" }}
                 className="p-3 rounded-lg cursor-pointer transition-all duration-200 flex items-center justify-between group"
               >
